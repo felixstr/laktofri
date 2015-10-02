@@ -1,22 +1,21 @@
 <section class="view" ng-controller="scanController as scanC">
-	<div class="box_scan animate1">
+	<div class="box_scan" ng-class="{'animate': scanC.currentItem == null && !scanC.status == 'load'}" ng-click="scanC.scan()">
 		<div></div>
 		<div></div>
 		<div></div>
 		<div></div>
 	</div>
 	
-	<div class="product nok reviewed">
-		<div class="title">Allos - Amaranth Wildbeeren-Müsli</div>
-		<img class="picture" src="images/Allos-AmaranthWildbeeren-Muesli.png" />
-		<div class="footer">
-			Bewertet: 22.09.15
-			<img src="images/icon_smiley_orange.svg" />
-		</div>
+	<div ng-show="scanC.status == 'load' || scanC.currentItem != null" ng-class="[scanC.status, {'load': scanC.load}, {'reviewed': scanC.currentItem.reviewed}, {'nok': scanC.currentItem.laktose}, {'ok': !scanC.currentItem.laktose}]" class="product {{scanC.currentItem != null && scanC.currentItem.review_state != '' ? 'review_'+scanC.currentItem.review_state : ''}}" ng-swipe-left="scanC.addToLibrary(scanC.currentItem)">
+		<div class="title">{{scanC.currentItem.name}}</div>
+		<img class="picture" src="{{scanC.currentItem.image}}" />
+		<div class="footer">Bewertet: {{scanC.currentItem.review_date | date:'dd.MM.yyyy'}}</div>
+		
+		<div class="loader"></div>
 	</div>
 	
-	<div class="dropZoneLibrary">
+	<div class="dropZoneLibrary" ng-show="scanC.currentItem != null && scanC.currentItem.laktose" ng-class="[scanC.status]">
 		<img src="images/icon_library_round.svg" />
 	</div>
-	
 </section>
+

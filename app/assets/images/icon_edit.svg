@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.3 (12081) - http://www.bohemiancoding.com/sketch -->
+    <title>icon_edit</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="design-5" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="5-AblageListEdit" sketch:type="MSArtboardGroup" transform="translate(-9.000000, -187.000000)">
+            <g id="list" sketch:type="MSLayerGroup" transform="translate(-219.000000, 115.000000)">
+                <g id="icon_edit" transform="translate(229.000000, 73.000000)" sketch:type="MSShapeGroup">
+                    <path d="M16.9235479,9.72748106 L20.135484,12.9393873 L12.0051867,21.0696846 L8.79507167,17.8577783 L16.9235479,9.72748106 L16.9235479,9.72748106 Z M22.5727223,8.95284291 L21.1403223,7.52044299 C20.5867492,6.96686988 19.6878609,6.96686988 19.132407,7.52044299 L17.7603111,8.89253888 L20.9722472,12.104475 L22.5727223,10.504 C23.002075,10.0746173 23.002075,9.38219569 22.5727223,8.95284291 L22.5727223,8.95284291 Z M7.11420122,22.3723711 C7.0557481,22.63544 7.2932624,22.8711631 7.55636114,22.8071871 L11.1355249,21.9393762 L7.92540988,18.72747 L7.11420122,22.3723711 L7.11420122,22.3723711 Z" id="Shape" fill="#80818D"></path>
+                    <circle id="Oval-85" stroke="#80818D" stroke-width="2" cx="15" cy="15" r="15"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,8 +1,24 @@
 <section class="view" ng-controller="reviewController as reviewC">
 	
+	<a class="link_back" href="#/products">Zurück</a>
 	
-	produkte bewerten
+	<div class="text">
+		<h1>Bewerte diese Produkte auf deine Verträglichkeit</h1>
+		<h2><span class="count">{{(reviewC.product_list | filter:{reviewed:false}).length}}</span><br />Unbewertete Produkte</h2>
+	</div>
 	
-	<a href="#/products">Zurück</a>
+	<div class="stack">
+		
+		<div class="product review_{{item.review_state}}" ng-repeat="item in reviewC.product_list | filter:{reviewed:false} | limitTo:5 | orderBy:'add_date'" ng-swipe-down="reviewC.setReview($event, item, 'bad')" ng-swipe-left="reviewC.setReview($event, item, 'good')" ng-swipe-right="reviewC.setReview($event, item, 'ok')">
+			<div class="title">{{item.name}}</div>
+			<img class="picture" src="{{item.image}}" />
+			<div class="footer">Bewertet: {{item.review_date | date:'dd.MM.yyyy'}}</div>
+		</div>
+				
+	</div>
+	
+	<img class="icon_smiley_good" src="images/icon_smiley_drop_good.svg" />
+	<img class="icon_smiley_ok" src="images/icon_smiley_drop_ok.svg" />
+	<img class="icon_smiley_bad" src="images/icon_smiley_drop_bad.svg" />
 	
 </section>

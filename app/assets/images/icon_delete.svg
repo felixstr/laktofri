@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.3 (12081) - http://www.bohemiancoding.com/sketch -->
+    <title>icon_delete</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="design-5" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="5-AblageListEdit" sketch:type="MSArtboardGroup" transform="translate(-263.000000, -378.000000)">
+            <g id="list" sketch:type="MSLayerGroup" transform="translate(-219.000000, 115.000000)">
+                <g id="edit-bar" transform="translate(294.000000, 248.000000)" sketch:type="MSShapeGroup">
+                    <g id="Rectangle-199-Copy-+-delete" transform="translate(175.000000, 0.000000)">
+                        <g id="icon_delete" transform="translate(13.000000, 15.000000)">
+                            <circle id="Oval-5-Copy" fill="#D13636" cx="9.99846018" cy="9.99908409" r="9.87993821"></circle>
+                            <path d="M5.85496229,5.97836931 L14.1469547,14.2703617" id="Path-492" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></path>
+                            <path d="M5.85496229,5.97836931 L14.1469547,14.2703617" id="Path-492-Copy" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" transform="translate(10.000958, 10.124365) scale(-1, 1) translate(-10.000958, -10.124365) "></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

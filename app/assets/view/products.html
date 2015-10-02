@@ -1,25 +1,35 @@
 <section class="view" ng-controller="productController as productC">
 	
 	<nav class="filter">
-		<button class="all active"></button>	
-		<button class="good"></button>	
-		<button class="ok"></button>	
-		<button class="bad"></button>	
+		<button class="all" ng-class="productC.currentState == 'all' ? 'active' : ''" ng-click="productC.changeFilter('all')"></button>	
+		<button class="good" ng-class="productC.currentState == 'good' ? 'active' : ''" ng-click="productC.changeFilter('good')"></button>	
+		<button class="ok" ng-class="productC.currentState == 'ok' ? 'active' : ''" ng-click="productC.changeFilter('ok')"></button>	
+		<button class="bad" ng-class="productC.currentState == 'bad' ? 'active' : ''" ng-click="productC.changeFilter('bad')"></button>	
 	</nav>
 		
-	<a class="link_review" href="#/review"><span class="count">6</span>Unbewertete Produkte</a>
+	<a ng-show="productC.currentState == 'all'" class="link_review" href="#/review"><span class="count">{{(productC.product_list | filter:{reviewed:false}).length}}</span>Unbewertete Produkte</a>
 	
 	<div class="product_list">
-		
-		<div class="product nok reviewed">
-			<div class="title">Allos - Amaranth Wildbeeren-Müsli</div>
-			<img class="picture" src="images/Allos-AmaranthWildbeeren-Muesli.png" />
-			<div class="footer">
-				Bewertet: 22.09.15
-				<img src="images/icon_smiley_orange.svg" />
+		<div class="product_wrapper" ng-class="productC.itemEdit === item ? 'open' : ''" ng-repeat="item in productC.product_list | filter:{reviewed:true} | productFilter:productC.currentState | orderBy:'review_date':true">
+			<div class="product reviewed review_{{item.review_state}}" ng-swipe-left="productC.openEdit(item)" ng-swipe-right="productC.itemEdit = null">
+				<div class="title">{{item.name}}</div>
+				<img class="picture" src="{{item.image}}" />
+				<div class="footer">Bewertet: {{item.review_date | date:'dd.MM.yyyy'}}</div>
 			</div>
-		</div>
-		
+			
+			<div class="edit">
+				<div class="review">
+					<button class="good" ng-class="item.review_state == 'good' ? 'active' : ''" ng-click="productC.changeReview(item, 'good')"></button>	
+					<button class="ok" ng-class="item.review_state == 'ok' ? 'active' : ''" ng-click="productC.changeReview(item, 'ok')"></button>	
+					<button class="bad" ng-class="item.review_state == 'bad' ? 'active' : ''" ng-click="productC.changeReview(item, 'bad')"></button>
+				</div>
+				<div class="delete">
+					<button ng-click="productC.deleteProduct(item)"></button>
+				</div>
+			</div>
+			
+			<img class="icon_edit" src="images/icon_edit.svg" />
+		</div>	
 	</div>
 	
 </section>

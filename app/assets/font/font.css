@@ -1,0 +1,74 @@
+@font-face {
+	font-family:'Roboto-Light';
+	src: url('Roboto-Light_gdi.eot');
+	src: url('Roboto-Light_gdi.eot?#iefix') format('embedded-opentype'),
+		url('Roboto-Light_gdi.woff') format('woff'),
+		url('Roboto-Light_gdi.ttf') format('truetype'),
+		url('Roboto-Light_gdi.svg#Roboto-Light') format('svg');
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	unicode-range: U+000D-25CA;
+}
+@font-face {
+	font-family:'Roboto-LightItalic';
+	src: url('Roboto-LightItalic_gdi.eot');
+	src: url('Roboto-LightItalic_gdi.eot?#iefix') format('embedded-opentype'),
+		url('Roboto-LightItalic_gdi.woff') format('woff'),
+		url('Roboto-LightItalic_gdi.ttf') format('truetype'),
+		url('Roboto-LightItalic_gdi.svg#Roboto-LightItalic') format('svg');
+	font-weight: 300;
+	font-style: italic;
+	font-stretch: normal;
+	unicode-range: U+000D-25CA;
+}
+
+@font-face {
+	font-family:'Roboto-Regular';
+	src: url('Roboto-Regular_gdi.eot');
+	src: url('Roboto-Regular_gdi.eot?#iefix') format('embedded-opentype'),
+		url('Roboto-Regular_gdi.woff') format('woff'),
+		url('Roboto-Regular_gdi.ttf') format('truetype'),
+		url('Roboto-Regular_gdi.svg#Roboto-Regular') format('svg');
+	font-weight: 400;
+	font-style: normal;
+	font-stretch: normal;
+	unicode-range: U+000D-25CA;
+}
+@font-face {
+	font-family:'Roboto-Italic';
+	src: url('Roboto-Italic_gdi.eot');
+	src: url('Roboto-Italic_gdi.eot?#iefix') format('embedded-opentype'),
+		url('Roboto-Italic_gdi.woff') format('woff'),
+		url('Roboto-Italic_gdi.ttf') format('truetype'),
+		url('Roboto-Italic_gdi.svg#Roboto-Italic') format('svg');
+	font-weight: 400;
+	font-style: italic;
+	font-stretch: normal;
+	unicode-range: U+000D-25CA;
+}
+
+@font-face {
+	font-family:'Roboto-Medium';
+	src: url('Roboto-Medium_gdi.eot');
+	src: url('Roboto-Medium_gdi.eot?#iefix') format('embedded-opentype'),
+		url('Roboto-Medium_gdi.woff') format('woff'),
+		url('Roboto-Medium_gdi.ttf') format('truetype'),
+		url('Roboto-Medium_gdi.svg#Roboto-Medium') format('svg');
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	unicode-range: U+000D-25CA;
+}
+@font-face {
+	font-family:'Roboto-MediumItalic';
+	src: url('Roboto-MediumItalic_gdi.eot');
+	src: url('Roboto-MediumItalic_gdi.eot?#iefix') format('embedded-opentype'),
+		url('Roboto-MediumItalic_gdi.woff') format('woff'),
+		url('Roboto-MediumItalic_gdi.ttf') format('truetype'),
+		url('Roboto-MediumItalic_gdi.svg#Roboto-MediumItalic') format('svg');
+	font-weight: 500;
+	font-style: italic;
+	font-stretch: normal;
+	unicode-range: U+000D-25CA;
+}
