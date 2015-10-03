@@ -120,7 +120,7 @@ section.view {
 /**
 * View Scan
 */
-body.viewScan section.view {
+section.view.viewScan {
 	background: url(images/bg_scan.png);
 	background-position: top center;
 	background-size: cover;
@@ -299,7 +299,7 @@ body.viewScan section.view {
 /**
 * View Products
 */
-body.viewProducts section.view {
+section.view.viewProducts {
 	
 	
 	padding-top: $header-height + 50px + 15px;
@@ -535,7 +535,7 @@ body.viewProducts section.view {
 /**
 * View Review
 */
-body.viewReview section.view {
+section.view.viewReview {
 	padding-top: $header-height + 50px + 15px;
 	
 	a.link_back {

@@ -24,34 +24,18 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 			});
 			
 	})
-	.controller('mainController', function($scope, $state) {
+	.controller('mainController', function($scope, $state, siteProperties) {
 		var mainCtrl = this;
+		
+		mainCtrl.siteProperties = siteProperties;
 
-		$scope.$on('changeView', function(event, msg) {
-
-			switch($state.current.name) {
-				case 'scan': 
-					mainCtrl.title = 'Scanner';
-					mainCtrl.className = 'viewScan';
-					mainCtrl.viewName = 'scan';
-				break;
-				case 'products': 
-					mainCtrl.title = 'Meine Produkte'
-					mainCtrl.className = 'viewProducts';
-					mainCtrl.viewName = 'products';
-				break;
-				case 'review': 
-					mainCtrl.title = 'Meine Produkte'
-					mainCtrl.className = 'viewReview';
-					mainCtrl.viewName = 'products';
-				break;
-			}
-		});
 
 	})
-	.controller('scanController', function($rootScope, $timeout, product_list, product_list_codecheck) {
+	.controller('scanController', function($timeout, siteProperties, product_list, product_list_codecheck) {
 		var scanC = this; // $scope
-		$rootScope.$broadcast('changeView');
+		
+		siteProperties.title = 'Scanner';
+		siteProperties.viewName = 'scan';
 		
 		scanC.currentItem = null;
 		scanC.currentItemAddon = null;
@@ -167,10 +151,11 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 		}
 		
 	})
-	.controller('productController', function($rootScope, $scope, product_list) {
+	.controller('productController', function($scope, siteProperties, product_list) {
 		var productC = this;
 		
-		$rootScope.$broadcast('changeView');
+		siteProperties.title = 'Meine Produkte';
+		siteProperties.viewName = 'products';
 		
 		productC.product_list = product_list;
 		productC.currentState = 'all';
@@ -216,11 +201,12 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 		
 		
 	})
-	.controller('reviewController', function($rootScope, product_list) {
+	.controller('reviewController', function(siteProperties, product_list) {
 		var reviewC = this; // $scope
 		reviewC.product_list = product_list;
 		
-		$rootScope.$broadcast('changeView');
+		siteProperties.title = 'Produkte bewerten';
+		siteProperties.viewName = 'products';
 		
 		
 		reviewC.setReview = function(event, item, state) {
@@ -391,7 +377,11 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 	        image: 'http://www.codecheck.info/img/48536022/1',
 	        laktose: false
 		}
-	]);
+	])
+	.value('siteProperties', {
+		title: '',
+		viewName: ''
+	});
 	
 
 

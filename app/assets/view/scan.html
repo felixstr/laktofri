@@ -1,4 +1,4 @@
-<section class="view" ng-controller="scanController as scanC">
+<section class="view viewScan" ng-controller="scanController as scanC">
 	<div class="box_scan" ng-class="{'animate': scanC.currentItem == null && scanC.status != 'load'}" ng-click="scanC.scan()">
 		<div></div>
 		<div></div>
@@ -8,7 +8,7 @@
 	
 	<div ng-show="scanC.status == 'load' || scanC.currentItem != null" ng-class="[scanC.status, {'load': scanC.load}, {'reviewed': scanC.currentItem.reviewed}, {'nok': scanC.currentItem.laktose}, {'ok': !scanC.currentItem.laktose}]" class="product {{scanC.currentItem != null && scanC.currentItem.review_state != '' ? 'review_'+scanC.currentItem.review_state : ''}}" ng-swipe-left="scanC.addToLibrary(scanC.currentItem)">
 		<div class="title">{{scanC.currentItem.name}}</div>
-		<img class="picture" ng-src="{{scanC.currentItem.image}}" />
+		<img class="picture" ng-show="scanC.currentItem != null" ng-src="{{scanC.currentItem.image}}" />
 		<div class="footer">Bewertet: {{scanC.currentItem.review_date | date:'dd.MM.yyyy'}}</div>
 		
 		<div class="loader"></div>
