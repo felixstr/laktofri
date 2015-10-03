@@ -13,7 +13,7 @@
 		<div class="product_wrapper" ng-class="productC.itemEdit === item ? 'open' : ''" ng-repeat="item in productC.product_list | filter:{reviewed:true} | productFilter:productC.currentState | orderBy:'review_date':true">
 			<div class="product reviewed review_{{item.review_state}}" ng-swipe-left="productC.openEdit(item)" ng-swipe-right="productC.itemEdit = null">
 				<div class="title">{{item.name}}</div>
-				<img class="picture" src="{{item.image}}" />
+				<img class="picture" ng-src="{{item.image}}" />
 				<div class="footer">Bewertet: {{item.review_date | date:'dd.MM.yyyy'}}</div>
 			</div>
 			

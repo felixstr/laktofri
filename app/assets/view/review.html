@@ -11,7 +11,7 @@
 		
 		<div class="product review_{{item.review_state}}" ng-repeat="item in reviewC.product_list | filter:{reviewed:false} | limitTo:5 | orderBy:'add_date'" ng-swipe-down="reviewC.setReview($event, item, 'bad')" ng-swipe-left="reviewC.setReview($event, item, 'good')" ng-swipe-right="reviewC.setReview($event, item, 'ok')">
 			<div class="title">{{item.name}}</div>
-			<img class="picture" src="{{item.image}}" />
+			<img class="picture" ng-src="{{item.image}}" />
 			<div class="footer">Bewertet: {{item.review_date | date:'dd.MM.yyyy'}}</div>
 		</div>
 				
