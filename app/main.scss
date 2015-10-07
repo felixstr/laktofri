@@ -879,10 +879,10 @@ section.view.viewReview {
 			&.ng-enter-active {
 				transform: scale(0.8) translateY(-20px); opacity: 1;
 			}
-
+			
 			&:first-child {
 				z-index: 10;
-				transform: translateY(28px);
+				transform: scale(1) translateY(28px);
 			}
 			&:nth-child(2) {
 				z-index: 9;
@@ -1185,6 +1185,34 @@ section.view.viewReview {
 					}
 				}
 			}
+			
+			&.move_back {
+				
+				
+				&:first-child {
+					transform: scale(0.8) translateY(-20px);
+					z-index: 6;
+					animation: move-up-1 $animation-move-duration $animation-move-ease forwards;
+					@keyframes move-up-1 {
+						0% {
+							transform: scale(1) translateY(28px);
+							z-index: 10;
+						}
+						
+						50% {
+							transform: scale(0.7) translateY(-250px);
+						}
+	
+						to {
+							transform: scale(0.75) translateY(-20px);
+							z-index: 5;
+						}
+					}
+					
+
+				}
+				
+			}
 
 		}
 		
@@ -1292,9 +1320,9 @@ section.view.viewReview {
 		}	
 	}
 	
-	&.review_good .footer { background-image: url(images/icon_smiley_green_active.svg);	}
-	&.review_ok .footer { background-image: url(images/icon_smiley_orange_active.svg);	}
-	&.review_bad .footer { background-image: url(images/icon_smiley_red_active.svg);	}
+	&.review_good .footer { background-image: url(images/icon_smiley_green.svg);	}
+	&.review_ok .footer { background-image: url(images/icon_smiley_orange.svg);	}
+	&.review_bad .footer { background-image: url(images/icon_smiley_red.svg);	}
 	
 	&.reviewed {
 		.footer {

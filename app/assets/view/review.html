@@ -4,12 +4,12 @@
 		
 		<div class="text">
 			<h1>Bewerte diese Produkte auf deine Verträglichkeit</h1>
-			<h2><span class="count">{{(reviewC.product_list | filter:{reviewed:false}).length}}</span><br />Unbewertete Produkte</h2>
+			<h2><span class="count">{{reviewC.countReview}}</span><br />Unbewertete Produkte</h2>
 		</div>
 		
 		<div class="stack">
 			
-			<div class="product review_{{item.review_state}}" ng-repeat="item in reviewC.product_list | filter:{reviewed:false} | limitTo:5 | orderBy:'stack_position':false" ng-swipe-down="reviewC.setReview($event, item, 'ok')" ng-swipe-left="reviewC.setReview($event, item, 'good')" ng-swipe-right="reviewC.setReview($event, item, 'bad')"  ng-swipe-up="reviewC.reviewLater($event, item)" ng-class="reviewC.status != '' ? reviewC.status : ''">
+			<div class="product review_{{item.review_state}}" ng-repeat="item in reviewC.product_list | filter:{reviewed:false} | orderBy:'stack_position':false | limitTo: reviewC.stackLimit" ng-swipe-down="reviewC.setReview($event, item, 'ok')" ng-swipe-left="reviewC.setReview($event, item, 'good')" ng-swipe-right="reviewC.setReview($event, item, 'bad')"  ng-swipe-up="reviewC.reviewLater($event, item)" ng-class="reviewC.status != '' ? reviewC.status : ''">
 				<div class="title">{{item.name}}</div>
 				<img class="picture" ng-src="{{item.image}}" />
 				<div class="footer">Bewertet: {{item.review_date | date:'dd.MM.yyyy'}}</div>

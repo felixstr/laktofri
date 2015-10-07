@@ -247,17 +247,24 @@ var element = angular.element( document.querySelector( '#product' ) );
 		
 		
 	})
-	.controller('reviewController', function($timeout, siteProperties, product_list) {
+	.controller('reviewController', function($timeout, siteProperties, product_list, Review) {
 		var reviewC = this; // $scope
 		reviewC.product_list = product_list;
 		reviewC.status = '';
+		reviewC.stackLimit = 5;
+		reviewC.countReview = Review.count();
+		
+		
 		
 		siteProperties.title = 'Produkte bewerten';
 		siteProperties.viewName = 'products';
 		
 		
 		reviewC.setReview = function(event, item, state) {
-// 			console.log(event);
+/*
+			console.log(state);
+			console.log(event);
+*/
 			reviewC.status = 'move_'+state;
 	        
 	        $timeout(function() {
@@ -271,10 +278,11 @@ var element = angular.element( document.querySelector( '#product' ) );
 		            	value.review_date = now.yyyymmdd();
 		            	value.review_state = state;
 		            	value.review_state_filter = state;
+		            	value.stack_position = 0;
 		            }
 		        });
-		        
-		        
+		   
+		        reviewC.countReview = Review.count();
 		        
 	        }, 700);
 		}
@@ -282,24 +290,38 @@ var element = angular.element( document.querySelector( '#product' ) );
 		
 		reviewC.reviewLater = function(event, item) {
 // 			console.log('up later');
-			
-			var currentPosition = 0;
-			var changeItem = null;
-			
-			angular.forEach(reviewC.product_list, function (value, key) {
-				if (value.stack_position > currentPosition) {
-					currentPosition = value.stack_position;
-				}
-				if (item == value) {
-					changeItem = value;
-				}
-			});
-			
-// 			console.log(changeItem);
-			changeItem.stack_position = currentPosition+1;
+
+			reviewC.status = 'move_back';
+			$timeout(function() {
+				
+				var currentPosition = 0;
+				var changeItem = null;
+				
+				angular.forEach(reviewC.product_list, function (value, key) {
+			/*
+		if (!value.reviewed) {
+						console.log(value.name, value.stack_position);
+					}
+*/
+					if (!value.reviewed && value.stack_position > currentPosition) {
+						
+						currentPosition = value.stack_position;
+					}
+					if (item == value) {
+						changeItem = value;
+					}
+				});
+				
+	// 			console.log(changeItem);
+		/*
+		console.log('reviewC.product_list', reviewC.product_list);
+				console.log('currentPosition', currentPosition);
+*/
+				changeItem.stack_position = currentPosition+1;
+				reviewC.status = '';
+			}, 700);
 		}
-		
-		
+	
 
 // 		console.log(product_list);
 		
@@ -458,8 +480,21 @@ var element = angular.element( document.querySelector( '#product' ) );
 	])
 	.value('siteProperties', {
 		title: '',
-		viewName: ''
-	});
-	
+		viewName: '',
+		reviewCount: 0
+	})
+	.factory('Review', function(product_list) {
+        return {
+            count: function() {
+	            var count = 0;
+	            angular.forEach(product_list, function (value, key) {
+			        if (!value.reviewed) {
+				        count++;
+		            }
+		        });
+                return count;
+            }
+        };
+    });
 
 
