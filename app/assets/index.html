@@ -22,18 +22,19 @@
 			<div class="title">{{mainC.siteProperties.title}}</div>
 		</header>
 		
-		<main ui-view>
+		<main ui-view ng-class="{animate: path !== '/'}" class="{{ pageChange }}">
 			
 		</main>
 		
-		<footer>
-			<a ui-sref="scan" ng-class="mainC.viewName == 'scan' ? 'active' : ''">Scanner</a>
-			<a ui-sref="products" ng-class="mainC.viewName == 'products' ? 'active' : ''">Meine Produkte</a>
+		<footer class="view_{{mainC.siteProperties.viewName}}">
+			
+			<a ui-sref="scan">Scanner</a>
+			<a ui-sref="products">Meine Produkte</a>
+			
+			<div class="border"></div>
 		</footer>
 		
-			
-	
-		
+					
 		<script type="text/javascript">
 			require('main');
 		</script>

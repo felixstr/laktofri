@@ -1,35 +1,58 @@
 <section class="view viewProducts" ng-controller="productController as productC">
-	
-	<nav class="filter">
-		<button class="all" ng-class="productC.currentState == 'all' ? 'active' : ''" ng-click="productC.changeFilter('all')"></button>	
-		<button class="good" ng-class="productC.currentState == 'good' ? 'active' : ''" ng-click="productC.changeFilter('good')"></button>	
-		<button class="ok" ng-class="productC.currentState == 'ok' ? 'active' : ''" ng-click="productC.changeFilter('ok')"></button>	
-		<button class="bad" ng-class="productC.currentState == 'bad' ? 'active' : ''" ng-click="productC.changeFilter('bad')"></button>	
-	</nav>
+	<div class="bg_wrap">
+		<nav class="filter filter_{{productC.currentState}}">
+			<button class="all" ng-class="productC.currentState == 'all' ? 'active' : ''" ng-click="productC.changeFilter('all')">
+				<div></div>
+				<div></div>
+				<div></div>
+				<img ng-src="{{productC.currentState == 'all' ? 'images/icon_smiley_all_active.svg' : 'images/icon_smiley_all.svg'}}" />
+				
+			</button>	
+			<button class="good" ng-class="productC.currentState == 'good' ? 'active' : ''" ng-click="productC.changeFilter('good')">
+				<div></div>
+				<img ng-src="{{productC.currentState == 'good' ? 'images/icon_smiley_green_active.svg' : 'images/icon_smiley_green.svg'}}" />
+				
+			</button>	
+			<button class="ok" ng-class="productC.currentState == 'ok' ? 'active' : ''" ng-click="productC.changeFilter('ok')">
+				<div></div>
+				<img ng-src="{{productC.currentState == 'ok' ? 'images/icon_smiley_orange_active.svg' : 'images/icon_smiley_orange.svg'}}" />
+				
+			</button>	
+			<button class="bad" ng-class="productC.currentState == 'bad' ? 'active' : ''" ng-click="productC.changeFilter('bad')">
+				<div></div>
+				<img ng-src="{{productC.currentState == 'bad' ? 'images/icon_smiley_red_active.svg' : 'images/icon_smiley_red.svg'}}" />
+				
+			</button>	
+			
+			<div class="border"></div>
+		</nav>
+			
+		<a ng-show="productC.currentState == 'all' && (productC.product_list | filter:{reviewed:false}).length > 0" class="link_review" href="#/review"><span class="count">{{(productC.product_list | filter:{reviewed:false}).length}}</span>Unbewertete Produkte</a>
 		
-	<a ng-show="productC.currentState == 'all'" class="link_review" href="#/review"><span class="count">{{(productC.product_list | filter:{reviewed:false}).length}}</span>Unbewertete Produkte</a>
-	
-	<div class="product_list">
-		<div class="product_wrapper" ng-class="productC.itemEdit === item ? 'open' : ''" ng-repeat="item in productC.product_list | filter:{reviewed:true} | productFilter:productC.currentState | orderBy:'review_date':true">
-			<div class="product reviewed review_{{item.review_state}}" ng-swipe-left="productC.openEdit(item)" ng-swipe-right="productC.itemEdit = null">
-				<div class="title">{{item.name}}</div>
-				<img class="picture" ng-src="{{item.image}}" />
-				<div class="footer">Bewertet: {{item.review_date | date:'dd.MM.yyyy'}}</div>
-			</div>
-			
-			<div class="edit">
-				<div class="review">
-					<button class="good" ng-class="item.review_state == 'good' ? 'active' : ''" ng-click="productC.changeReview(item, 'good')"></button>	
-					<button class="ok" ng-class="item.review_state == 'ok' ? 'active' : ''" ng-click="productC.changeReview(item, 'ok')"></button>	
-					<button class="bad" ng-class="item.review_state == 'bad' ? 'active' : ''" ng-click="productC.changeReview(item, 'bad')"></button>
+		<div class="product_list">
+			<div class="product_wrapper" ng-class="productC.itemEdit === item ? 'open' : ''" ng-repeat="item in productC.product_list | filter:{reviewed:true} | productFilter:productC.currentState | orderBy:'review_date':true">
+				<div class="product reviewed review_{{item.review_state}}" ng-class="productC.itemEdit === item ? 'open' : ''" ng-swipe-left="productC.openEdit(item)" ng-swipe-right="productC.itemEdit = null">
+					<div class="title">{{item.name}}</div>
+					<img class="picture" ng-src="{{item.image}}" />
+					<div class="footer">Bewertet: {{item.review_date | date:'dd.MM.yyyy'}}</div>
 				</div>
-				<div class="delete">
-					<button ng-click="productC.deleteProduct(item)"></button>
-				</div>
-			</div>
-			
-			<img class="icon_edit" src="images/icon_edit.svg" />
-		</div>	
+				
+				<button class="good" ng-class="{active: item.review_state == 'good', 'new_active': item.review_changed}" ng-click="productC.changeReview(item, 'good')">
+					<div></div>
+					<img ng-src="{{item.review_state == 'good' ? 'images/icon_smiley_green_active.svg' : 'images/icon_smiley_green.svg'}}" />
+				</button>	
+				<button class="ok" ng-class="{active: item.review_state == 'ok', 'new_active': item.review_changed}" ng-click="productC.changeReview(item, 'ok')">
+					<div></div>
+					<img ng-src="{{item.review_state == 'ok' ? 'images/icon_smiley_orange_active.svg' : 'images/icon_smiley_orange.svg'}}" />
+				</button>	
+				<button class="bad" ng-class="{active: item.review_state == 'bad', 'new_active': item.review_changed}" ng-click="productC.changeReview(item, 'bad')">
+					<div></div>
+					<img ng-src="{{item.review_state == 'bad' ? 'images/icon_smiley_red_active.svg' : 'images/icon_smiley_red.svg'}}" />
+				</button>
+				<button class="delete" ng-click="productC.deleteProduct(item)"></button>
+				
+<!-- 				<img class="icon_edit" src="images/icon_edit.svg" /> -->
+			</div>	
+		</div>
 	</div>
-	
 </section>

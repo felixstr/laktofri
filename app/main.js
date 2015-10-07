@@ -5,13 +5,17 @@ Date.prototype.yyyymmdd = function() {
 	return yyyy +'-'+ (mm[1]?mm:"0"+mm[0]) +'-'+ (dd[1]?dd:"0"+dd[0]); // padding
 };
 
-angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
+angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate', 'ngTouch'])
 	.config(function($stateProvider, $urlRouterProvider) {
 		$urlRouterProvider.otherwise('/');
 		
 		$stateProvider
-			.state('scan', {
+			.state('/', {
 				url: '/',
+				templateUrl: 'view/scan.html'
+			})
+			.state('scan', {
+				url: '/scan',
 				templateUrl: 'view/scan.html'
 			})
 			.state('products', {
@@ -24,6 +28,21 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 			});
 			
 	})
+	.run(function ($rootScope, $location) {
+		$rootScope.$on("$locationChangeStart", function (event, next, current) {
+			$rootScope.path = $location.path();
+			
+			var from = current.split('/').reverse()[0];
+			var to = next.split('/').reverse()[0];
+			
+			if (from == '' && to != '') {
+				from = 'scan';
+			}
+			var pageChange = (from == '' ? '' : from+'_')+to;
+
+			$rootScope.pageChange = pageChange;
+		});
+	})
 	.controller('mainController', function($scope, $state, siteProperties) {
 		var mainCtrl = this;
 		
@@ -31,7 +50,7 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 
 
 	})
-	.controller('scanController', function($timeout, siteProperties, product_list, product_list_codecheck) {
+	.controller('scanController', function($animate, $timeout, siteProperties, product_list, product_list_codecheck) {
 		var scanC = this; // $scope
 		
 		siteProperties.title = 'Scanner';
@@ -95,6 +114,15 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 		        if (newItem != null) {
 			        scanC.status = 'load';
 			        $timeout(function() {
+				        /*
+var element = angular.element( document.querySelector( '#product' ) );
+				        console.log('product', element);
+				        $animate.leave(element, function(elem, phase) {
+					        console.log(elem);
+					        console.log(phase);
+					        
+				        });
+*/
 				        scanC.status = '';
 				        scanC.currentItem = newItem;
 			        }, 1500);
@@ -106,26 +134,30 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 		
 		scanC.addToLibrary = function(item) {
 			if (item.laktose) {
-				console.log('asdf');
 				scanC.status = 'toLibrary';
 				
 				$timeout(function() {
 					
 					var itemChange = false;
 					var date = new Date();
+					var currentPosition = 0;
 					
 					angular.forEach(scanC.product_list, function (value, key) {
+						if (value.stack_position > currentPosition) {
+							currentPosition = value.stack_position;
+						}
 						if (item.barcode == value.barcode) {
-							itemChange = true;
+							itemChange = key;
 							
 							
 							value.reviewed = false;
 							value.review_date = '';
 							value.review_state = '';
 							value.review_state_filter = '';
-							value.add_date = date.yyyymmdd();
 						}
 					});
+					
+					
 					
 					if (!itemChange) {
 						scanC.product_list.push({
@@ -136,9 +168,12 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 							review_date: '',
 							review_state: '',
 							review_state_filter: '',
-							add_date: date.yyyymmdd()
+							stack_position: currentPosition+1
 						})
+					} else {
+						scanC.product_list[itemChange].stack_position = currentPosition+1;
 					}
+					
 					
 					scanC.currentItem = null;
 					scanC.status = '';
@@ -151,7 +186,7 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 		}
 		
 	})
-	.controller('productController', function($scope, siteProperties, product_list) {
+	.controller('productController', function($scope, $timeout, siteProperties, product_list) {
 		var productC = this;
 		
 		siteProperties.title = 'Meine Produkte';
@@ -178,13 +213,24 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 		}
 		
 		productC.changeReview = function(item, state) {
-			productC.itemEdit = null;
+// 			productC.itemEdit = null;
+			var reviewItem = null;
 			
 			angular.forEach(productC.product_list, function (value, key) {
 		        if (item == value) {
-	            	value.review_state = state;
+			        reviewItem = value;
 	            }
 	        });
+	        
+	        if (reviewItem) {
+		        reviewItem.review_changed = true;
+	            reviewItem.review_state = state;
+	            
+	            $timeout(function() {
+			        productC.itemEdit = null;
+			        reviewItem.review_changed = false;
+		        }, 500);
+	        }
 	        
 		}
 		productC.deleteProduct = function(item) {
@@ -201,9 +247,10 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 		
 		
 	})
-	.controller('reviewController', function(siteProperties, product_list) {
+	.controller('reviewController', function($timeout, siteProperties, product_list) {
 		var reviewC = this; // $scope
 		reviewC.product_list = product_list;
+		reviewC.status = '';
 		
 		siteProperties.title = 'Produkte bewerten';
 		siteProperties.viewName = 'products';
@@ -211,17 +258,48 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 		
 		reviewC.setReview = function(event, item, state) {
 // 			console.log(event);
-			angular.forEach(reviewC.product_list, function (value, key) {
-		        if (item == value) {
-			        var now = new Date();
-			        
-	            	value.reviewed = true;
-	            	value.review_date = now.yyyymmdd();
-	            	value.review_state = state;
-	            	value.review_state_filter = state;
-	            }
-	        });
+			reviewC.status = 'move_'+state;
+	        
+	        $timeout(function() {
+		        reviewC.status = '';
+		        
+		        angular.forEach(reviewC.product_list, function (value, key) {
+			        if (item == value) {
+				        var now = new Date();
+				        
+		            	value.reviewed = true;
+		            	value.review_date = now.yyyymmdd();
+		            	value.review_state = state;
+		            	value.review_state_filter = state;
+		            }
+		        });
+		        
+		        
+		        
+	        }, 700);
 		}
+		
+		
+		reviewC.reviewLater = function(event, item) {
+// 			console.log('up later');
+			
+			var currentPosition = 0;
+			var changeItem = null;
+			
+			angular.forEach(reviewC.product_list, function (value, key) {
+				if (value.stack_position > currentPosition) {
+					currentPosition = value.stack_position;
+				}
+				if (item == value) {
+					changeItem = value;
+				}
+			});
+			
+// 			console.log(changeItem);
+			changeItem.stack_position = currentPosition+1;
+		}
+		
+		
 
 // 		console.log(product_list);
 		
@@ -249,7 +327,7 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 			review_date: '2015-09-12',
 			review_state: 'ok',
 			review_state_filter: 'ok',
-			add_date: '2015-10-01'
+			stack_position: 0
 		},
 		{
 			barcode: '4016249004026',
@@ -259,7 +337,7 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 			review_date: '2015-09-22',
 			review_state: 'good',
 			review_state_filter: 'good',
-			add_date: '2015-10-01'
+			stack_position: 1
 		},
 		{
 			barcode: '9005182007008',
@@ -269,7 +347,7 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 			review_date: '2015-08-01',
 			review_state: 'bad',
 			review_state_filter: 'bad',
-			add_date: '2015-10-01'
+			stack_position: 2
 		},
 		{
 			barcode: '8722700644682',
@@ -279,7 +357,7 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 			review_date: '',
 			review_state: '',
 			review_state_filter: '',
-			add_date: '2015-10-01'
+			stack_position: 3
 		},
 		{
 			barcode: '4003490039396',
@@ -289,7 +367,7 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 			review_date: '2015-05-23',
 			review_state: 'ok',
 			review_state_filter: 'ok',
-			add_date: '2015-10-01'
+			stack_position: 4
 		},
 		{
 			barcode: '4000540003765',
@@ -299,7 +377,7 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 			review_date: '',
 			review_state: '',
 			review_state_filter: '',
-			add_date: '2015-10-01'
+			stack_position: 5
 		},
 		{
 			barcode: '2000422455356',
@@ -309,7 +387,7 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 			review_date: '',
 			review_state: '',
 			review_state_filter: '',
-			add_date: '2015-10-01'
+			stack_position: 6
 		},
 		{
 			barcode: '4008230489103',
@@ -319,7 +397,7 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 			review_date: '',
 			review_state: '',
 			review_state_filter: '',
-			add_date: '2015-10-01'
+			stack_position: 7
 		},
 		{
 			barcode: '9003740086793',
@@ -329,7 +407,7 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 			review_date: '',
 			review_state: '',
 			review_state_filter: '',
-			add_date: '2015-10-01'
+			stack_position: 8
 		},
 		{
 			barcode: '4104420112360',
@@ -339,7 +417,7 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 			review_date: '',
 			review_state: '',
 			review_state_filter: '',
-			add_date: '2015-10-01'
+			stack_position: 9
 		},
 		{
 			barcode: '7611654693222',
@@ -349,7 +427,7 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate'])
 			review_date: '',
 			review_state: '',
 			review_state_filter: '',
-			add_date: '2015-10-01'
+			stack_position: 10
 		}
 	])
 	.value('product_list_codecheck', [

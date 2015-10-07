@@ -6,12 +6,10 @@
 		<div></div>
 	</div>
 	
-	<div ng-show="scanC.status == 'load' || scanC.currentItem != null" ng-class="[scanC.status, {'load': scanC.load}, {'reviewed': scanC.currentItem.reviewed}, {'nok': scanC.currentItem.laktose}, {'ok': !scanC.currentItem.laktose}]" class="product {{scanC.currentItem != null && scanC.currentItem.review_state != '' ? 'review_'+scanC.currentItem.review_state : ''}}" ng-swipe-left="scanC.addToLibrary(scanC.currentItem)">
+	<div id="product" ng-show="scanC.status == 'load' || scanC.currentItem != null" ng-class="[scanC.status, {'load': scanC.load}, {'reviewed': scanC.currentItem.reviewed}, {'nok': scanC.currentItem.laktose}, {'ok': !scanC.currentItem.laktose}]" class="product {{scanC.currentItem != null && scanC.currentItem.review_state != '' ? 'review_'+scanC.currentItem.review_state : ''}}" ng-swipe-left="scanC.addToLibrary(scanC.currentItem)">
 		<div class="title">{{scanC.currentItem.name}}</div>
 		<img class="picture" ng-show="scanC.currentItem != null" ng-src="{{scanC.currentItem.image}}" />
-		<div class="footer">Bewertet: {{scanC.currentItem.review_date | date:'dd.MM.yyyy'}}</div>
-		
-		<div class="loader"></div>
+		<div class="footer">Bewertet: {{scanC.currentItem.review_date | date:'dd.MM.yyyy'}}</div>		
 	</div>
 	
 	<div class="dropZoneLibrary" ng-show="scanC.currentItem != null && scanC.currentItem.laktose" ng-class="[scanC.status]">

@@ -10,6 +10,8 @@ $color-blue-darkest: #161527;
 $color-blue-dark: #21213A;
 $color-blue: #38384F;
 $color-blue-light: #EBEDF2;
+$color-blue-shadow: #383950;
+$color-blue-shadow-light: #BFC1C5;
 
 $color-grey-light: #F5F5F5;
 
@@ -30,9 +32,16 @@ $product_height: 175px;
 	-moz-box-sizing: border-box; 
 	box-sizing: border-box; 
 	font-family: roboto-Regular, arial;
+	-webkit-font-smoothing: antialiased;
 }
 ul {
 	list-style: none;
+}
+body {
+	background: $color-blue-darkest;
+	overflow-x: hidden;
+	-webkit-text-size-adjust: none;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);		
 }
 
 /* header */
@@ -43,14 +52,16 @@ header {
 	width: 100vw;
 	z-index: 100;
 	
+	box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.30);
+	
 	.title {
 		color: white;
 		width: 100%;
 		position: absolute;
 		bottom: 7px;
 		text-align: center;
-		font-family: Roboto-Regular;
-		font-size: 14px;
+		font-family: Roboto-Medium;
+		font-size: 15px;
 	}
 }
 
@@ -62,7 +73,7 @@ footer {
 	width: 100vw;
 	background: white;
 	
-	box-shadow: 0px -1px 2px 0px rgba(191,191,191,0.40);
+	box-shadow: 0px -1px 3px 0px rgba(0,0,0,0.30);
 	
 	a {
 		position: absolute;
@@ -94,26 +105,125 @@ footer {
 			background-position: 30px 17px;
 			padding-left: 27px;
 		}
+			
+	}
+	
+	.border {
+		position: absolute;
+		height: 2px;
+		width: 50vw;
+		background: $color-blue-darkest;
+		top:0;
+		left: 0;
 		
-		&.active {
-			border-top: 2px solid $color-blue-darkest;
+		transition: all 0.2s ease-in-out;
+	}
+	
+	&.view_scan {
+		a:first-child {
+			background-color: $color-grey-light;
+		}
+	}
+	&.view_products {
+		a:nth-child(2) {
 			background-color: $color-grey-light;
 		}
 		
+		.border {
+			transform: translateX(50vw);
+		}
 	}
 }
+
+/* ui-view (animation) */
+main {
+
+	&.animate.ng-enter, &.ng-leave {
+		transition:all 0.3s ease;
+		position: relative;
+		
+		section.view {
+			min-height: calc(100vh - #{$header-height});
+			height:  calc(100vh - #{$header-height});
+			overflow: hidden;
+		}
+	}
+	
+	&.ng-leave {
+		opacity: 1;
+		transform: scale3d(1, 1, 1) translateY(0);
+	}
+	&.ng-leave-active {
+		opacity: 0.3;
+		transform: scale3d(0.85, 0.85, 0.85) translateY($header-height);
+	}
+	
+	&.animate {
+		&.ng-enter {
+			z-index: 20;
+		}
+		&.products_scan, &.review_products, &.review_scan {
+			&.ng-enter {
+				transform: translateX(-100vw) scale3d(0.9, 0.9, 0.9)  translateY($header-height/2);
+			}
+			&.ng-enter-active {
+			// 	transform: scale3d(1, 1, 1) translateX(0) translateY(0);
+				
+				animation: view-in-left 0.5s 0.2s ease-in-out;
+						
+				@keyframes view-in-left {
+					0% { transform: translateX(-100vw) scale3d(0.9, 0.9, 0.9)  translateY($header-height/2); }
+					60% { transform: translateX(0vw) scale3d(0.9, 0.9, 0.9)  translateY($header-height/2); } 
+					100% { transform: translateX(0vw) scale3d(1, 1, 1) translateY(0); }
+				}
+			}
+		}
+		&.scan_products, &.products_review {
+			&.ng-enter {
+				transform: translateX(100vw) scale3d(0.9, 0.9, 0.9)  translateY($header-height/2);
+			}
+			&.ng-enter-active {
+			// 	transform: scale3d(1, 1, 1) translateX(0) translateY(0);
+				
+				animation: view-in 0.5s 0.2s ease-in-out;
+						
+				@keyframes view-in {
+					0% { transform: translateX(100vw) scale3d(0.9, 0.9, 0.9)  translateY($header-height/2); }
+					60% { transform: translateX(0vw) scale3d(0.9, 0.9, 0.9)  translateY($header-height/2); } 
+					100% { transform: translateX(0vw) scale3d(1, 1, 1) translateY(0); }
+				}
+			}
+		}
+		
+		
+		
+	}
+	
+	
+}
+
+
 
 
 /* section main */
 section.view {
 	width: 100vw;
-	background: red;
 	min-height: 100vh;
-	padding-top: $header-height + 15px;
-	position: relative;
+	padding-top: $header-height;
+	position: absolute;
+	top: 0;
 	float: left;
-	padding-bottom: $header-height + 15px;
-	background: $color-blue-light;
+	padding-bottom: $header-height;
+	
+	
+	div.bg_wrap {
+		float: left;
+		width: 100%;
+		padding-top: $header-height + 15px;
+		padding-bottom: 15px;
+		background: $color-blue-light;
+		min-height: calc(100vh - #{$header-height + $footer-height});
+	}
 }
 
 
@@ -124,6 +234,9 @@ section.view.viewScan {
 	background: url(images/bg_scan.png);
 	background-position: top center;
 	background-size: cover;
+	top: $header-height;
+	min-height: calc(100vh - #{$header-height+ $footer-height});
+	padding-top: 15px;
 	
 	.box_scan {
 		position: absolute;
@@ -185,7 +298,7 @@ section.view.viewScan {
 		opacity: 1;
 		transform: scale(1);
 		
-		transition: 0.3s ease-in-out;
+// 		transition: 0.3s ease-in-out;
 		
 		.title {
 			color: white;
@@ -217,6 +330,7 @@ section.view.viewScan {
 			}
 		}
 		
+		
 		&.load {
 			transform: scale(0.5);
 			
@@ -241,26 +355,33 @@ section.view.viewScan {
 			
 		}
 		
+		&.load-remove {
+			animation: popup 0.3s ease-in-out;
+			
+			@keyframes popup {
+				from, 60%, to {
+					animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+				}
+				
+				0% {
+					transform: scale3d(.5, .5, .5);
+				}
+				
+				60% {
+					transform: scale3d(1.1, 1.1, 1.1);
+				}
+				
+				to {
+					transform: scale3d(1, 1, 1);
+				}
+			}
+		}
+		
 		&.toLibrary {
 			transition: 0.5s ease-in-out;
 			transform: translateX(-40vw) scale(0.2);
 			opacity: 0;
-		}/*
-		&.toLibrary-remove {
-			transform: translateX(0) scale(1);
-			
 		}
-		
-		&.load-add {
-			opacity: 0;
-			transform: scale(0.5);
-		}
-		
-		&.load-remove {
-			opacity: 0;
-			transform: scale(0.5);
-		}
-		*/
 		
 	}
 	
@@ -286,13 +407,7 @@ section.view.viewScan {
 			
 			
 		}
-		/*
-		&.ng-hide {
-			transition-delay: 0;
-			opacity: 0;
-			transform: scale(1);
-		}
-		*/
+
 	}
 }
 
@@ -302,7 +417,7 @@ section.view.viewScan {
 section.view.viewProducts {
 	
 	
-	padding-top: $header-height + 50px + 15px;
+	padding-top: $header-height;
 	
 	nav.filter {
 		position: fixed;
@@ -312,7 +427,7 @@ section.view.viewProducts {
 		height: 50px;
 		background: $color-blue-dark;
 		
-		box-shadow: 0px 1px 2px 0px rgba(191,191,191,0.40);
+		box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.30);
 		
 		
 		button {
@@ -321,47 +436,95 @@ section.view.viewProducts {
 			height: 50px;
 			border: none;
 			background: none;
-			background-repeat: no-repeat;
-			background-position: center 14px;
-			background-size: auto 20px;
+			position: relative;
 			
+			div {
+				background: $color-blue-shadow;
+				width: 34px;
+				height: 34px;
+				border-radius: 50%;
+				position: absolute;
+				top: 6px;
+				left: calc(50% - 17px);
+				transform: scale3d(0.1, 0.1, 0.1);
+				
+			}
+			
+			img {
+				position: absolute;
+				width: 20px;
+				top: 13px;
+				left: calc(50% - 10px);
+			}
+				
 			&.active {
-				border-bottom: 2px solid white;
-				background-color: $color-blue;
+				div {
+					animation: filterBg 0.3s forwards;
+					
+					@keyframes filterBg {
+						0% { transform: scale3d(0, 0, 0); }
+						60% { transform: scale3d(1.2, 1.2, 1.2); }
+						80% { transform: scale3d(0.9, 0.9, 0.9); }
+						100% { transform: scale3d(1, 1, 1); }
+					}
+				}
 			}
 			
 			&:first-child {
-				background-image: url(images/icon_smiley_all.svg);
-				
-				&.active {
-					background-image: url(images/icon_smiley_all_active.svg);
+				img {
+					width: 62px;
+					left: calc(50% - 31px);
+				}
+				div {
+					&:first-child {
+						width: 29px;
+						height: 29px;
+						top: 9px;
+						left: calc(50% - 37px);
+					}
+					&:nth-child(3) {
+						width: 29px;
+						height: 29px;
+						top: 9px;
+						left: calc(50% + 8px);
+					}
 				}
 			}
-			&:nth-child(2) {
-				background-image: url(images/icon_smiley_green.svg);
-				
-				&.active {
-					background-image: url(images/icon_smiley_green_active.svg);
-				}
+		}
+		
+		.border {
+			height: 2px;
+			width: 25%;
+			background: white;
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			
+			transition: all 0.2s ease-in-out;
+		}
+		
+		&.filter_good {
+			.border {
+				transform: translateX(25vw);
 			}
-			&:nth-child(3) {
-				background-image: url(images/icon_smiley_orange.svg);
-				
-				&.active {
-					background-image: url(images/icon_smiley_orange_active.svg);
-				}
+		}
+		&.filter_ok {
+			.border {
+				transform: translateX(50vw);
 			}
-			&:nth-child(4) {
-				background-image: url(images/icon_smiley_red.svg);
-				
-				&.active {
-					background-image: url(images/icon_smiley_red_active.svg);
-				}
+		}
+		&.filter_bad {
+			.border {
+				transform: translateX(75vw);
 			}
 		}
 	}
 	
 	a.link_review {
+		
+		transition:0.3s ease all;
+// 		transform: translateY(0);
+		
 		background: green;
 		width: 100%;
 		float: left;
@@ -393,23 +556,33 @@ section.view.viewProducts {
 			border-radius: 11px;
 			padding: 0 7px;
 		}
+		
+	
+		&.ng-hide {
+			transform: scale3d(.9, .9, .9);
+			margin-top: -90px;
+		}
 	}
 	
 	.product_list {
 		float: left;
+		width: 100%;
 		
 		.product_wrapper {
 			position: relative;
 			z-index: 10;
 			height: $product_height;
+			width: $product_width;
 			
 			margin-bottom: 10px;
-			margin-left: calc(100vw/2 - 265px/2);
+			left: calc(100vw/2 - 265px/2);
 				
 			.product {
 				position: absolute;
 				z-index: 10;
+				transform: translateX(00px);
 				
+// 				transition: all 2s ease-in-out;
 				
 				.title {
 					border-top: 4px solid black;
@@ -433,100 +606,181 @@ section.view.viewProducts {
 				}
 	
 				
-				
-			}
-			
-			.edit {
-				position: absolute;
-				top: 65px;
-				left: 20px;
-				z-index: 0;
-				width: $product_width - 40;
-				
-				.review {
-					float: left;
-					width: 40px *3 +8;
-					height: 50px;
-					background: $color-blue-dark;
-					box-shadow: 0px 1px 0px 0px #BEBEBE;
-					border-radius: 2px;
+				&.open {
+					transform: translateX(-280px);
+					
+					animation: product-left 0.5s ease-out;
+					
+					@keyframes product-left {
+						from, 60%, to {
+							animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+						}
+						0% { transform: translateX(0); }
+						60% { transform: translateX(-300px); }
+						to { transform: translateX(-280px); }
+					}
 					
 					button {
-						float: left;
-						width: 32px;
-						height: 32px;
-						margin-top: 9px;
-						margin-left: 8px;
-						border: none;
-						background: none;
-						background-repeat: no-repeat;
-						background-position: center center;
-						background-size: 20px;
-						border: 0px solid $color-blue;
-						border-radius: 50%;
-						
-						&:first-child {
-							background-image: url(images/icon_smiley_green.svg);
-							&.active {
-								background-image: url(images/icon_smiley_green_active.svg);
-							}
-						}
-						&:nth-child(2) {
-							background-image: url(images/icon_smiley_orange.svg);
-							&.active {
-								background-image: url(images/icon_smiley_orange_active.svg);
-							}
-						}
-						&:nth-child(3) {
-							background-image: url(images/icon_smiley_red.svg);
-							&.active {
-								background-image: url(images/icon_smiley_red_active.svg);
-							}
-						}
-						
-						&.active {
-							border-width: 2px;
-							background-color: $color-blue;
-						}
+						opacity: 0;
+						transform: translateX(0);
 					}
 				}
-				
-				.delete {
-					float: right;
-					height: 50px;
-					width: 50px;
-					background: $color-blue-dark;
-					box-shadow: 0px 1px 0px 0px #BEBEBE;
-					border-radius: 2px;
+				&.open-remove {
 					
-					button {
-						background: none;
-						border: none;
-						background-repeat: no-repeat;
-						background-size: 20px;
-						background-image: url(images/icon_delete.svg);
-						width: 32px;
-						height: 32px;
-						margin-top: 25px - 10px;
-						margin-left: 25px - 10px;
-						
+// 					transform: translateX(280px);
+					animation: product-right 0.5s ease-out;
+					
+					@keyframes product-right {
+						from, 60%, to {
+							animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+						}
+						0% { transform: translateX(-280px); }
+						60% { transform: translateX(20px); }
+						to { transform: translateX(0); }
 					}
+
 				}
 			}
-			
-			img.icon_edit {
+							
+			button {
 				position: absolute;
-				left: -45px;
-				width: 30px;
-				top: $product_height/2 - 30/2;
+				top: $product_height/2 - 17px;
+				width: 34px;
+				height: 34px;
+				
+				
+				border: none;
+				background: none;
+				
+				
+				img {
+					position: absolute;
+					width: 20px;
+					top: 7px;
+					left: 7px;
+					background: white;
+					border-radius: 50%;
+				}
+				
+				div {
+					background: white;
+					width: 34px;
+					height: 34px;
+					border-radius: 50%;
+					position: absolute;
+					top: 0px;
+					left: 0;
+					
+					transform: scale3d(0.1, 0.1, 0.1);
+				}
+	
+				
+				&:first-of-type {
+					left: 30px;
+				}
+				&:nth-of-type(2) {
+					left: 70px;
+				}
+				&:nth-of-type(3) {
+					left: 110px;
+				}
+				
+				&:nth-of-type(4) {
+					background: none;
+					border: none;
+					background-repeat: no-repeat;
+					background-size: 34px;
+					background-image: url(images/icon_delete.svg);
+					width: 34px;
+					height: 34px;
+					
+					left: 200px;
+				}
 				
 			}
-			
+		
 			&.open {
-				.product {
-					transform: translateX(-265px);
+				button {
+					opacity: 0;
+					transform: translateX(0);
+					
+					$edit-in-duration: 0.8s;
+		
+					&:first-of-type{
+						animation: edit-in $edit-in-duration 0.3s ease-out forwards;
+					}
+					&:nth-of-type(2) {
+						animation: edit-in $edit-in-duration 0.2s ease-out forwards;
+					}
+					&:nth-of-type(3) {
+						animation: edit-in $edit-in-duration 0.1s ease-out forwards;
+					}
+					&:nth-of-type(4) {
+						animation: edit-in $edit-in-duration 0s ease-out forwards;
+					}
+					
+					&.active {
+						div {
+							animation: shadow-in 0.5s $edit-in-duration+0.2s ease-out forwards;
+						}
+						
+						&.new_active {
+							div {
+								animation: shadow-in 0.5s 0s ease-out forwards;
+							}
+						}
+					}
+					
+					@keyframes shadow-in {
+						0% { transform: scale3d(0, 0, 0); }
+						60% { transform: scale3d(1.2, 1.2, 1.2); }
+						80% { transform: scale3d(0.9, 0.9, 0.9); }
+						100% { transform: scale3d(1, 1, 1); }
+					}
+				}
+				
+				
+				@keyframes edit-in {
+					0% { opacity: 0; transform: translateX(0); }
+					29% { opacity: 0; transform: translateX(-280px); } 
+					30% { opacity: 1; transform: translateX(-280px); } 
+					80% { opacity: 1; transform: translateX(5px); } 
+					100% { opacity: 1; transform: translateX(0px); }
 				}
 			}
+			
+
+			
+			&.ng-enter-stagger {
+				animation-delay: 0.2s;
+			}
+			&.ng-enter {
+				transform: scale3d(0.5, 0.5, 0.5); opacity: 0;
+				height: 0;
+				margin-bottom:0;
+				
+				animation: list-in 0.6s 0.2s forwards;
+					
+				@keyframes list-in {
+					0% { transform: scale3d(0.5, 0.5, 0.5); opacity: 0; height: 0; margin-bottom: 0;}
+					40% { transform: scale3d(0.5, 0.5, 0.5); opacity: 0; height: $product_height; margin-bottom: 10px; }
+					50% { transform: scale3d(1.05, 1.05, 1.05); }
+					70% { transform: scale3d(0.9, 0.9, 0.9); }
+					100% { transform: scale3d(1, 1, 1);  opacity: 1;  height: $product_height; margin-bottom: 10px; }
+				}
+			}
+			
+			
+			&.ng-leave {
+				animation: list-out 0.4s forwards;
+					
+				@keyframes list-out {
+					0% { transform: scale3d(1, 1, 1);  opacity: 1; height: $product_height; margin-bottom: 10px; }
+					50% { transform: scale3d(0.5, 0.5, 0.5); opacity: 0; height: $product_height; margin-bottom: 10px; }
+					100% { transform: scale3d(0.5, 0.5, 0.5); opacity: 0; height: 0; margin-bottom: 0; }
+				}
+			}
+		
 		}
 	}
 	
@@ -536,7 +790,7 @@ section.view.viewProducts {
 * View Review
 */
 section.view.viewReview {
-	padding-top: $header-height + 50px + 15px;
+	padding-top: $header-height;
 	
 	a.link_back {
 		position: fixed;
@@ -558,7 +812,7 @@ section.view.viewReview {
 		background-position: 10px center;
 		
 		
-		box-shadow: 0px 1px 2px 0px rgba(191,191,191,0.40);
+		box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.30);
 	}
 	
 	.text {
@@ -615,54 +869,363 @@ section.view.viewReview {
 			position: absolute;
 			border: 1px solid #DFDFE0;
 			
+			transition: all 0.5s ease-in-out;
+			
+			&.ng-enter {
+				transition: 0.5s linear all;
+				
+				transform: scale(0.75) translateY(-32px); opacity: 0; z-index: 5;
+			}
+			&.ng-enter-active {
+				transform: scale(0.8) translateY(-20px); opacity: 1;
+			}
+
 			&:first-child {
-// 				top: 0px;
 				z-index: 10;
 				transform: translateY(28px);
 			}
 			&:nth-child(2) {
 				z-index: 9;
 				transform: scale(0.95) translateY(16px);
-// 				top: $margin;
 			}
 			&:nth-child(3) {
 				z-index: 8;
 				transform: scale(0.9) translateY(4px);
-// 				top: $margin*2;
 			}
 			&:nth-child(4) {
 				z-index: 7;
 				transform: scale(0.85) translateY(-8px);
-// 				top: $margin*3;
 			}
 			&:nth-child(5) {
 				z-index: 6;
-				transform: scale(0.8) translateY(-20px);
-// 				top: $margin*4;
-				
+				transform: scale(0.8) translateY(-20px);	
 			}
 			
+			$animation-move-duration: 0.7s;
+			$animation-move-ease: ease-out;
+			
+			&.move_good {
+				
+				
+				&:first-child {
+					animation: move-left-1 $animation-move-duration $animation-move-ease forwards;
+					@keyframes move-left-1 {
+						0% {
+							transform: translateY(28px) translateX(0px);
+						}
+						
+						20% {
+							transform: translateY(28px) translateX(-50px);
+							opacity: 1;
+						}
+						50% {
+							transform: translateY(28px) translateX(-150px) scale(0.2) ;
+							opacity: 0;
+						}
+						to {
+							transform: translateY(28px) translateX(-150px) scale(0.2) ;
+							opacity: 0;
+						}
+					}
+				}
+				
+				&:nth-child(2) {
+					animation: move-left-2 $animation-move-duration $animation-move-ease;
+					@keyframes move-left-2 {
+						0% {
+							transform: scale(0.95) translateY(16px) translateX(0);
+						}
+						
+						20% {
+							transform: scale(0.95) translateY(16px) translateX(-40px);
+						}
+						
+						to {
+							transform: scale(0.95) translateY(16px) translateX(0);
+						}
+					}
+				}
+				
+				&:nth-child(3) {
+					animation: move-left-3 $animation-move-duration $animation-move-ease;
+					@keyframes move-left-3 {
+						0% {
+							transform: scale(0.9) translateY(4px) translateX(0);
+						}
+						
+						20% {
+							transform: scale(0.9) translateY(4px) translateX(-30px);
+						}
+						
+						to {
+							transform: scale(0.9) translateY(4px) translateX(0);
+						}
+					}
+				}
+				
+				&:nth-child(4) {
+					animation: move-left-4 $animation-move-duration $animation-move-ease;
+					@keyframes move-left-4 {
+						0% {
+							transform: scale(0.85) translateY(-8px) translateX(0);
+						}
+						
+						20% {
+							transform: scale(0.85) translateY(-8px) translateX(-20px);
+						}
+						
+						to {
+							transform: scale(0.85) translateY(-8px) translateX(0);
+						}
+					}
+				}
+				
+				&:nth-child(5) {
+					animation: move-left-5 $animation-move-duration $animation-move-ease;
+					@keyframes move-left-5 {
+						0% {
+							transform: scale(0.8) translateY(-20px) translateX(0);
+						}
+						
+						20% {
+							transform: scale(0.8) translateY(-20px) translateX(-10px);
+						}
+						
+						to {
+							transform: scale(0.8) translateY(-20px) translateX(0);
+						}
+					}
+				}
+			}
+			
+			&.move_bad {
+				
+				
+				&:first-child {
+					animation: move-right-1 $animation-move-duration $animation-move-ease forwards;
+					@keyframes move-right-1 {
+						0% {
+							transform: translateY(28px) translateX(0px);
+						}
+						
+						20% {
+							transform: translateY(28px) translateX(50px);
+							opacity: 1;
+						}
+						50% {
+							transform: translateY(28px) translateX(150px) scale(0.2);
+							opacity: 0;
+						}
+						to {
+							transform: translateY(28px) translateX(150px) scale(0.2);
+							opacity: 0;
+						}
+					}
+				}
+				
+				&:nth-child(2) {
+					animation: move-right-2 $animation-move-duration $animation-move-ease;
+					@keyframes move-right-2 {
+						0% {
+							transform: scale(0.95) translateY(16px) translateX(0);
+						}
+						
+						20% {
+							transform: scale(0.95) translateY(16px) translateX(40px);
+						}
+						
+						to {
+							transform: scale(0.95) translateY(16px) translateX(0);
+						}
+					}
+				}
+				
+				&:nth-child(3) {
+					animation: move-right-3 $animation-move-duration $animation-move-ease;
+					@keyframes move-right-3 {
+						0% {
+							transform: scale(0.9) translateY(4px) translateX(0);
+						}
+						
+						20% {
+							transform: scale(0.9) translateY(4px) translateX(30px);
+						}
+						
+						to {
+							transform: scale(0.9) translateY(4px) translateX(0);
+						}
+					}
+				}
+				
+				&:nth-child(4) {
+					animation: move-right-4 $animation-move-duration $animation-move-ease;
+					@keyframes move-right-4 {
+						0% {
+							transform: scale(0.85) translateY(-8px) translateX(0);
+						}
+						
+						20% {
+							transform: scale(0.85) translateY(-8px) translateX(20px);
+						}
+						
+						to {
+							transform: scale(0.85) translateY(-8px) translateX(0);
+						}
+					}
+				}
+				
+				&:nth-child(5) {
+					animation: move-right-5 $animation-move-duration $animation-move-ease;
+					@keyframes move-right-5 {
+						0% {
+							transform: scale(0.8) translateY(-20px) translateX(0);
+						}
+						
+						20% {
+							transform: scale(0.8) translateY(-20px) translateX(10px);
+						}
+						
+						to {
+							transform: scale(0.8) translateY(-20px) translateX(0);
+						}
+					}
+				}
+			}
+			
+			&.move_ok {
+				
+				
+				&:first-child {
+					animation: move-down-1 $animation-move-duration $animation-move-ease forwards;
+					@keyframes move-down-1 {
+						0% {
+							transform: translateY(28px);
+						}
+						
+						20% {
+							transform: translateY(78px);
+							opacity: 1;
+						}
+						50% {
+							transform: translateY(128px) scale(0.2);
+							opacity: 0;
+						}
+						to {
+							transform: translateY(128px) scale(0.2);
+							opacity: 0;
+						}
+					}
+				}
+				
+				&:nth-child(2) {
+					animation: move-down-2 $animation-move-duration $animation-move-ease;
+					@keyframes move-down-2 {
+						0% {
+							transform: scale(0.95) translateY(16px);
+						}
+						
+						20% {
+							transform: scale(0.95) translateY(56px);
+						}
+						
+						to {
+							transform: scale(0.95) translateY(16px);
+						}
+					}
+				}
+				
+				&:nth-child(3) {
+					animation: move-down-3 $animation-move-duration $animation-move-ease;
+					@keyframes move-down-3 {
+						0% {
+							transform: scale(0.9) translateY(4px);
+						}
+						
+						20% {
+							transform: scale(0.9) translateY(34px);
+						}
+						
+						to {
+							transform: scale(0.9) translateY(4px);
+						}
+					}
+				}
+				
+				&:nth-child(4) {
+					animation: move-down-4 $animation-move-duration $animation-move-ease;
+					@keyframes move-down-4 {
+						0% {
+							transform: scale(0.85) translateY(-8px);
+						}
+						
+						20% {
+							transform: scale(0.85) translateY(12px);
+						}
+						
+						to {
+							transform: scale(0.85) translateY(-8px);
+						}
+					}
+				}
+				
+				&:nth-child(5) {
+					animation: move-down-5 $animation-move-duration $animation-move-ease;
+					@keyframes move-down-5 {
+						0% {
+							transform: scale(0.8) translateY(-20px);
+						}
+						
+						20% {
+							transform: scale(0.8) translateY(-10px);
+						}
+						
+						to {
+							transform: scale(0.8) translateY(-20px);
+						}
+					}
+				}
+			}
+
 		}
 		
 	}
 	
 	.icon_smiley_good {
 		position: absolute;
-		left: 10px;
+		left: calc(50vw - #{$product_width/2} - 30px - 15px);
 		top: 375px;
 		width: 30px;
+		
+		&.move_good {
+			animation: pop-smiley 0.3s 0.4s forwards;
+		}
 	}
 	.icon_smiley_ok {
 		position: absolute;
-		right: 10px;
-		top: 375px;
+		left: calc(50vw - 15px);
+		top: 490px;
 		width: 30px;
+		
+		&.move_ok {
+			animation: pop-smiley 0.3s 0.4s forwards;
+		}
 	}
 	.icon_smiley_bad {
 		position: absolute;
-		left: calc(100vw/2 - 15px);
-		bottom: $footer-height + 15;
+		left: calc(50vw + #{$product_width/2} + 15px);
+		top: 375px;
 		width: 30px;
+		
+		&.move_bad {
+			animation: pop-smiley 0.3s 0.4s forwards;
+		}
+	}
+	
+	@keyframes pop-smiley {
+		0% { transform: scale(1); }
+		40% { transform: scale(1.5); } 
+		80% { transform: scale(1); }
+		100% { transform: scale(1); }
 	}
 }
 
@@ -729,9 +1292,9 @@ section.view.viewReview {
 		}	
 	}
 	
-	&.review_good .footer { background-image: url(images/icon_smiley_green.svg);	}
-	&.review_ok .footer { background-image: url(images/icon_smiley_orange.svg);	}
-	&.review_bad .footer { background-image: url(images/icon_smiley_red.svg);	}
+	&.review_good .footer { background-image: url(images/icon_smiley_green_active.svg);	}
+	&.review_ok .footer { background-image: url(images/icon_smiley_orange_active.svg);	}
+	&.review_bad .footer { background-image: url(images/icon_smiley_red_active.svg);	}
 	
 	&.reviewed {
 		.footer {
