@@ -24,7 +24,7 @@
 		<footer class="view_{{mainC.siteProperties.viewName}}">
 			
 			<a ui-sref="scan">Scanner</a>
-			<a ui-sref="products">Meine Produkte</a>
+			<a ui-sref="products">Meine Produkte <span ng-if="mainC.siteProperties.reviewCount > 0" class="count value-{{mainC.siteProperties.reviewCount}}">{{mainC.siteProperties.reviewCount}}</span></a>
 			<a ui-sref="help">?</a>
 			
 			<div class="border"></div>

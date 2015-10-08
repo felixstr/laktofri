@@ -54,17 +54,20 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate', 'ngTouch', 'hm
 
 
 	})
-	.controller('scanController', function($animate, $timeout, siteProperties, product_list, product_list_codecheck) {
+	.controller('scanController', function($animate, $timeout, siteProperties, product_list, product_list_codecheck, Review) {
 		var scanC = this; // $scope
 		
 		siteProperties.title = 'Scanner';
 		siteProperties.viewName = 'scan';
+		siteProperties.reviewCount = Review.count();
+		
 		
 		scanC.currentItem = null;
 		scanC.currentItemAddon = null;
 		scanC.product_list = product_list;
 		scanC.product_list_codecheck = product_list_codecheck;
 		scanC.status = '';
+		
 		
 		var barcode_array = [];
 		angular.forEach(scanC.product_list, function (value, key) {
@@ -146,7 +149,6 @@ var element = angular.element( document.querySelector( '#product' ) );
 				
 				
 				event.element.css({
-// 					'margin-left': event.deltaX+'px'
 					'transform': 'translateX('+event.deltaX+'px)'
 				});
 				
@@ -205,6 +207,7 @@ var element = angular.element( document.querySelector( '#product' ) );
 							
 							scanC.currentItem = null;
 							scanC.status = '';
+							siteProperties.reviewCount = Review.count();
 							
 							
 							event.element.css({
@@ -225,15 +228,17 @@ var element = angular.element( document.querySelector( '#product' ) );
 		}
 		
 	})
-	.controller('productController', function($scope, $timeout, siteProperties, product_list) {
+	.controller('productController', function($scope, $timeout, siteProperties, product_list, Review) {
 		var productC = this;
 		
 		siteProperties.title = 'Meine Produkte';
 		siteProperties.viewName = 'products';
+		siteProperties.reviewCount = Review.count();
 		
 		productC.product_list = product_list;
 		productC.currentState = 'all';
 		productC.itemEdit = null;
+		productC.viewCount = siteProperties.reviewCount;
 				
 		productC.changeFilter = function(state) {
 			angular.forEach(productC.product_list, function (value, key) {
@@ -288,10 +293,12 @@ var element = angular.element( document.querySelector( '#product' ) );
 			
 		}
 		
-		productC.openEdit = function(item) {
+		/*
+productC.openEdit = function(item) {
 			productC.itemEdit = item;
 		}
 		
+*/
 		productC.changeReview = function(item, state) {
 
 			var reviewItem = null;
@@ -334,72 +341,128 @@ var element = angular.element( document.querySelector( '#product' ) );
 		reviewC.stackLimit = 5;
 		reviewC.countReview = Review.count();
 		
+		reviewC.stackProperties = {
+			firstY: 28,
+			posDiff: 12,
+			scaleDiff: 0.05,
+			count: 5
+		};
 		
 		
 		siteProperties.title = 'Produkte bewerten';
 		siteProperties.viewName = 'products';
+		siteProperties.reviewCount = reviewC.countReview;
 		
-		
-		reviewC.setReview = function(event, item, state) {
-/*
-			console.log(state);
-			console.log(event);
-*/
-			reviewC.status = 'move_'+state;
-	        
-	        $timeout(function() {
-		        reviewC.status = '';
-		        
-		        angular.forEach(reviewC.product_list, function (value, key) {
-			        if (item == value) {
-				        var now = new Date();
-				        
-		            	value.reviewed = true;
-		            	value.review_date = now.yyyymmdd();
-		            	value.review_state = state;
-		            	value.review_state_filter = state;
-		            	value.stack_position = 0;
-		            }
-		        });
-		   
-		        reviewC.countReview = Review.count();
-		        
-	        }, 700);
-		}
-		
-		
-		reviewC.reviewLater = function(event, item) {
-// 			console.log('up later');
+		Review.order();
 
-			reviewC.status = 'move_back';
-			$timeout(function() {
+		reviewC.moveProduct = function(event, item) {
+			$('.stack').removeClass('animate');
+/* 			'transform': 'scale('+(1-(item.stack_position*0.05))+') translateY('+(28-(item.stack_position*12))+'px)' */
+// 			console.log('event', event.deltaX);
+			
+			var max = 30;
+			for (var i = 0; i < reviewC.stackProperties.count; i++) {
+				var deltaX = event.deltaX;
+				var deltaY = event.deltaY;
+				if (i > 0) {
+					if (event.deltaX < -max) {
+						deltaX = -max;
+					} else if(event.deltaX > max) {
+						deltaX = max;
+					}
+					if (event.deltaY < -max) {
+						deltaY = -max;
+					} else if(event.deltaY > max) {
+						deltaY = max;
+					}
+				}
 				
-				var currentPosition = 0;
-				var changeItem = null;
-				
-				angular.forEach(reviewC.product_list, function (value, key) {
-			/*
-		if (!value.reviewed) {
-						console.log(value.name, value.stack_position);
-					}
-*/
-					if (!value.reviewed && value.stack_position > currentPosition) {
-						
-						currentPosition = value.stack_position;
-					}
-					if (item == value) {
-						changeItem = value;
-					}
+				$('.product.position_'+i).css({
+					'transform': 'scale('+(1-(i*reviewC.stackProperties.scaleDiff))+') translateX('+deltaX/reviewC.stackProperties.count*(reviewC.stackProperties.count-i)+'px) translateY('+(reviewC.stackProperties.firstY-(i*reviewC.stackProperties.posDiff)+(deltaY/reviewC.stackProperties.count*(reviewC.stackProperties.count-i)))+'px)'
 				});
+			}
+			
+			if (event.isFinal) {
 				
-	// 			console.log(changeItem);
-		/*
-		console.log('reviewC.product_list', reviewC.product_list);
-				console.log('currentPosition', currentPosition);
-*/
-				changeItem.stack_position = currentPosition+1;
-				reviewC.status = '';
-			}, 700);
+				$('.stack').addClass('animate');
+				var max = 80;
+				if (
+					(event.deltaX < -max || event.deltaX  > max) ||
+					((event.deltaY < -150 && reviewC.countReview > 1) || event.deltaY  > max)
+				) {
+					var status = '';
+					if (event.deltaX < -max) {
+						status = 'good';	        
+					} else if (event.deltaX > max) {
+						status = 'bad';	
+					}
+					if (event.deltaY < -150) {
+						status = 'back';	        
+					} else if (event.deltaY > max) {
+						status = 'ok';	
+					}
+					
+					
+					reviewC.status = 'move_'+status;
+					
+					for (var i = 1; i < reviewC.stackProperties.count; i++) {
+						$('.product.position_'+i).css({
+							'transform': 'scale('+(1-(i*reviewC.stackProperties.scaleDiff))+') translateX(0px) translateY('+(reviewC.stackProperties.firstY-(i*reviewC.stackProperties.posDiff))+'px)'
+						});
+					}
+					
+					$timeout(function() {
+				        
+				        if (status == 'back') {
+					        var changeItem = null;
+				
+							angular.forEach(reviewC.product_list, function (value, key) {
+								if (item == value) {
+									changeItem = value;
+								}
+							});
+				
+				
+							var newPosition = Review.order(changeItem);
+	
+							changeItem.stack_position = newPosition;
+							
+				        } else {
+					        angular.forEach(reviewC.product_list, function (value, key) {
+						        if (item == value) {
+							        var now = new Date();
+							        
+					            	value.reviewed = true;
+					            	value.review_date = now.yyyymmdd();
+					            	value.review_state = status;
+					            	value.review_state_filter = false;
+					            	value.stack_position = 10000;
+					            }
+					        });
+					   
+					        reviewC.countReview = Review.count();
+					        siteProperties.reviewCount = reviewC.countReview;
+					        
+					        Review.order();
+				        
+				        }
+				        
+				        reviewC.status = '';
+				        
+			        }, 700);
+
+
+				} else {
+					
+					for (var i = 0; i < reviewC.stackProperties.count; i++) {
+						$('.product.position_'+i).css({
+							'transform': 'scale('+(1-(i*reviewC.stackProperties.scaleDiff))+') translateX(0px) translateY('+(reviewC.stackProperties.firstY-(i*reviewC.stackProperties.posDiff))+'px)'
+						});
+					}
+			
+				}
+			}
+			
 		}
 	
 
@@ -580,6 +643,35 @@ var element = angular.element( document.querySelector( '#product' ) );
 		            }
 		        });
                 return count;
+            },
+            order: function(changeItem) {
+	            var tempArray = product_list.map(function(product, key) {
+					if (!product.reviewed && product !== changeItem) {
+				 		return {'key' : key, 'position': product.stack_position};
+				 	}
+			    }).filter(function(value){
+				    return value !== undefined;
+			    });
+			    
+// 			    console.log('tempArray1', tempArray);
+			    
+			    tempArray.sort(function(a, b){return a.position-b.position});
+			    
+// 			    console.log('tempArray2', tempArray);
+			    
+			    var newPositions = 0;
+				tempArray.forEach(function(value) {
+					var itemPosition = 100000;
+					angular.forEach(product_list, function (product, key) {
+						if (value.key === key) {
+						    itemPosition = newPositions++;
+						    product.stack_position = itemPosition;
+					    }
+					});
+					
+				});
+				
+				return newPositions;
             }
         };
     });

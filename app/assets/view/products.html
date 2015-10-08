@@ -27,7 +27,7 @@
 			<div class="border"></div>
 		</nav>
 			
-		<a ng-show="productC.currentState == 'all' && (productC.product_list | filter:{reviewed:false}).length > 0" class="link_review" href="#/review"><span class="count">{{(productC.product_list | filter:{reviewed:false}).length}}</span>Unbewertete Produkte</a>
+		<a ng-show="productC.currentState == 'all' && productC.viewCount > 0" class="link_review" href="#/review"><span class="count">{{productC.viewCount}}</span>Unbewertete Produkte</a>
 		
 		<div class="product_list">
 			<div class="product_wrapper" ng-class="productC.itemEdit === item ? 'open' : ''" ng-repeat="item in productC.product_list | filter:{reviewed:true} | productFilter:productC.currentState | orderBy:'review_date':true">

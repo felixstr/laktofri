@@ -3,23 +3,26 @@
 		<div class="statusbar-back"></div>
 		<a class="link_back" href="#/products">Zurück</a>
 		
-		<div class="text">
-			<h1>Bewerte diese Produkte auf deine Verträglichkeit</h1>
-			<h2><span class="count">{{reviewC.countReview}}</span><br />Unbewertete Produkte</h2>
-		</div>
+		<div ng-if="reviewC.countReview > 0">
 		
-		<div class="stack">
-			
-			<div class="product review_{{item.review_state}}" ng-repeat="item in reviewC.product_list | filter:{reviewed:false} | orderBy:'stack_position':false | limitTo: reviewC.stackLimit" ng-swipe-down="reviewC.setReview($event, item, 'ok')" ng-swipe-left="reviewC.setReview($event, item, 'good')" ng-swipe-right="reviewC.setReview($event, item, 'bad')"  ng-swipe-up="reviewC.reviewLater($event, item)" ng-class="reviewC.status != '' ? reviewC.status : ''">
-				<div class="title">{{item.name}}</div>
-				<img class="picture" ng-src="{{item.image}}" />
-				<div class="footer">Bewertet: {{item.review_date | date:'dd.MM.yyyy'}}</div>
+			<div class="text">
+				<h1>Bewerte diese Produkte auf deine Verträglichkeit</h1>
+				<h2><span class="count value-{{reviewC.countReview}}">{{reviewC.countReview}}</span><br />Unbewertete Produkte</h2>
 			</div>
-					
+			
+			<div class="stack">
+				
+				<div class="product review_{{item.review_state}} position_{{item.stack_position}}" ng-class="[reviewC.status]" ng-repeat="item in reviewC.product_list | filter:{reviewed:false}" ng-style="{'transform': 'scale('+(1-(item.stack_position*reviewC.stackProperties.scaleDiff))+') translateY('+(reviewC.stackProperties.firstY-(item.stack_position*reviewC.stackProperties.posDiff))+'px)', 'z-index': 10-item.stack_position, 'opacity': (item.stack_position >= reviewC.stackProperties.count ? '0' : '1')}" hm-panmove="reviewC.moveProduct($event, item)" hm-panend="reviewC.moveProduct($event, item)">
+					<div class="title">{{item.name}}</div>
+					<img class="picture" ng-src="{{item.image}}" />
+					<div class="footer">Bewertet: {{item.review_date | date:'dd.MM.yyyy'}}</div>
+				</div>
+						
+			</div>
+			
+			<img class="icon_smiley_good" ng-class="[reviewC.status]" src="images/icon_smiley_green.svg" />
+			<img class="icon_smiley_ok" ng-class="[reviewC.status]" src="images/icon_smiley_orange.svg" />
+			<img class="icon_smiley_bad" ng-class="[reviewC.status]" src="images/icon_smiley_red.svg" />
 		</div>
-		
-		<img class="icon_smiley_good" ng-class="[reviewC.status]" src="images/icon_smiley_green.svg" />
-		<img class="icon_smiley_ok" ng-class="[reviewC.status]" src="images/icon_smiley_orange.svg" />
-		<img class="icon_smiley_bad" ng-class="[reviewC.status]" src="images/icon_smiley_red.svg" />
 	</div>
 </section>

@@ -82,10 +82,37 @@ footer {
 		&:nth-child(2) {
 			right: $footer-height;
 			background-image: url(images/icon_library.svg);
-			background-size: 16px;
-			background-position: 15px 17px;
+			background-size: 17px;
+			background-position: 15px 16px;
 			padding-left: 25px;
 			border-left: 1px solid $color-blue-light;
+			
+			span.count {
+				position: absolute;
+				top: 4px;
+				left: 4px;
+				height: 20px;
+				min-width: 20px;
+				padding: 0 6px;
+				line-height: 20px;
+				background: $color-red;
+				border-radius: 10px;
+				color: white;
+				
+// 				transition: background-color 0.26s linear 0s;
+				
+				&[class*="-add"] {
+					animation: countPop 0.3s forwards;
+					
+					@keyframes countPop {
+						0% { transform: scale3d(1, 1, 1); }
+						60% { transform: scale3d(1.2, 1.2, 1.2); }
+						80% { transform: scale3d(0.9, 0.9, 0.9); }
+						100% { transform: scale3d(1, 1, 1); }
+					}
+					
+				}
+			}
 		}
 		
 		&:nth-child(3) {
@@ -102,10 +129,10 @@ footer {
 	
 	.border {
 		position: absolute;
-		height: 2px;
+		height: 4px;
 		width: calc((100vw - #{$footer-height}) / 2);
 		background: $color-blue-darkest;
-		top:0;
+		bottom:0;
 		left: 0;
 		
 		transition: all 0.2s ease-in-out;
@@ -134,7 +161,7 @@ footer {
 		}
 		
 		.border {
-			width: $footer-height + 1px;
+// 			width: $footer-height + 1px;
 			transform: translateX(calc(100vw - #{$footer-height}));
 		}
 	}
@@ -547,7 +574,7 @@ section.view.viewProducts {
 		border-right: none;
 		text-decoration: none;
 		font-family: Roboto-Regular;
-		font-size: 14px;
+		font-size: 15px;
 		color: $color-blue;
 		padding-left: 10px;
 		margin-bottom: 15px;
@@ -557,7 +584,7 @@ section.view.viewProducts {
 		background-position: right 10px center;
 
 		span {
-			background: $color-blue;
+			background: $color-red;
 			line-height: 22px;
 			min-width: 22px;
 			height: 22px;
@@ -621,19 +648,6 @@ section.view.viewProducts {
 				&.open {
 					transform: translateX(-280px) !important;
 					
-					/*
-animation: product-left 2s ease-out !important;
-					
-					@keyframes product-left {
-						from, 60%, to {
-							animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
-						}
-// 						0% { transform: translateX(0) !important; }
-						60% { transform: translateX(-300px) !important; }
-						to { transform: translateX(-280px) !important; }
-					}
-*/
-					
 					button {
 						opacity: 0;
 						transform: translateX(0);
@@ -641,7 +655,6 @@ animation: product-left 2s ease-out !important;
 				}
 				&.open-remove {
 					
-// 					transform: translateX(280px);
 					animation: product-right 0.5s ease-out;
 					
 					@keyframes product-right {
@@ -773,17 +786,16 @@ animation: product-left 2s ease-out !important;
 				animation-delay: 0.2s;
 			}
 			&.ng-enter {
-				transform: scale3d(0.5, 0.5, 0.5); opacity: 0;
+				transform: scale3d(0.8, 0.8, 0.8); opacity: 0;
 				height: 0;
 				margin-bottom:0;
 				
 				animation: list-in 0.6s 0.2s forwards;
 					
 				@keyframes list-in {
-					0% { transform: scale3d(0.5, 0.5, 0.5); opacity: 0; height: 0; margin-bottom: 0;}
+					0% { transform: scale3d(0.8, 0.8, 0.8); opacity: 0; height: 0; margin-bottom: 0;}
 					40% { transform: scale3d(0.5, 0.5, 0.5); opacity: 0; height: $product_height; margin-bottom: 10px; }
-					50% { transform: scale3d(1.05, 1.05, 1.05); }
-					70% { transform: scale3d(0.9, 0.9, 0.9); }
+					50% { transform: scale3d(1.1, 1.1, 1.1); }
 					100% { transform: scale3d(1, 1, 1);  opacity: 1;  height: $product_height; margin-bottom: 10px; }
 				}
 			}
@@ -794,8 +806,8 @@ animation: product-left 2s ease-out !important;
 					
 				@keyframes list-out {
 					0% { transform: scale3d(1, 1, 1);  opacity: 1; height: $product_height; margin-bottom: 10px; }
-					50% { transform: scale3d(0.5, 0.5, 0.5); opacity: 0; height: $product_height; margin-bottom: 10px; }
-					100% { transform: scale3d(0.5, 0.5, 0.5); opacity: 0; height: 0; margin-bottom: 0; }
+					50% { transform: scale3d(0.8, 0.8, 0.8); opacity: 0; height: $product_height; margin-bottom: 10px; }
+					100% { transform: scale3d(0.8, 0.8, 0.8); opacity: 0; height: 0; margin-bottom: 0; }
 				}
 			}
 		
@@ -876,6 +888,18 @@ section.view.viewReview {
 				padding: 0 15px;
 				margin-bottom: 10px;
 				font-family: Roboto-Medium;
+				
+				&[class*="-add"] {
+					animation: countPop 0.3s forwards;
+					
+					@keyframes countPop {
+						0% { transform: scale3d(1, 1, 1); }
+						60% { transform: scale3d(1.2, 1.2, 1.2); }
+						80% { transform: scale3d(0.9, 0.9, 0.9); }
+						100% { transform: scale3d(1, 1, 1); }
+					}
+					
+				}
 			}
 		}
 	}
@@ -889,357 +913,61 @@ section.view.viewReview {
 		width: $product_width;
 		height: 210px;
 		
-		$margin: 7px;
-		$items: 5;
 		.product {
 			position: absolute;
 			border: 1px solid #DFDFE0;
-			
-			transition: all 0.5s ease-in-out;
-			
-			&.ng-enter {
-				transition: 0.5s linear all;
-				
-				transform: scale(0.75) translateY(-32px); opacity: 0; z-index: 5;
-			}
-			&.ng-enter-active {
-				transform: scale(0.8) translateY(-20px); opacity: 1;
-			}
-			
-			&:first-child {
-				z-index: 10;
-				transform: scale(1) translateY(28px);
-			}
-			&:nth-child(2) {
-				z-index: 9;
-				transform: scale(0.95) translateY(16px);
-			}
-			&:nth-child(3) {
-				z-index: 8;
-				transform: scale(0.9) translateY(4px);
-			}
-			&:nth-child(4) {
-				z-index: 7;
-				transform: scale(0.85) translateY(-8px);
-			}
-			&:nth-child(5) {
-				z-index: 6;
-				transform: scale(0.8) translateY(-20px);	
-			}
-			
-			$animation-move-duration: 0.7s;
-			$animation-move-ease: ease-out;
+
 			
 			&.move_good {
 				
-				
-				&:first-child {
-					animation: move-left-1 $animation-move-duration $animation-move-ease forwards;
-					@keyframes move-left-1 {
-						0% {
-							transform: translateY(28px) translateX(0px);
-						}
-						
-						20% {
-							transform: translateY(28px) translateX(-50px);
-							opacity: 1;
-						}
-						50% {
-							transform: translateY(28px) translateX(-150px) scale(0.2) ;
-							opacity: 0;
-						}
-						to {
-							transform: translateY(28px) translateX(-150px) scale(0.2) ;
-							opacity: 0;
-						}
-					}
-				}
-				
-				&:nth-child(2) {
-					animation: move-left-2 $animation-move-duration $animation-move-ease;
-					@keyframes move-left-2 {
-						0% {
-							transform: scale(0.95) translateY(16px) translateX(0);
-						}
-						
-						20% {
-							transform: scale(0.95) translateY(16px) translateX(-40px);
-						}
-						
-						to {
-							transform: scale(0.95) translateY(16px) translateX(0);
-						}
-					}
-				}
-				
-				&:nth-child(3) {
-					animation: move-left-3 $animation-move-duration $animation-move-ease;
-					@keyframes move-left-3 {
-						0% {
-							transform: scale(0.9) translateY(4px) translateX(0);
-						}
-						
-						20% {
-							transform: scale(0.9) translateY(4px) translateX(-30px);
-						}
-						
-						to {
-							transform: scale(0.9) translateY(4px) translateX(0);
-						}
-					}
-				}
-				
-				&:nth-child(4) {
-					animation: move-left-4 $animation-move-duration $animation-move-ease;
-					@keyframes move-left-4 {
-						0% {
-							transform: scale(0.85) translateY(-8px) translateX(0);
-						}
-						
-						20% {
-							transform: scale(0.85) translateY(-8px) translateX(-20px);
-						}
-						
-						to {
-							transform: scale(0.85) translateY(-8px) translateX(0);
-						}
-					}
-				}
-				
-				&:nth-child(5) {
-					animation: move-left-5 $animation-move-duration $animation-move-ease;
-					@keyframes move-left-5 {
-						0% {
-							transform: scale(0.8) translateY(-20px) translateX(0);
-						}
-						
-						20% {
-							transform: scale(0.8) translateY(-20px) translateX(-10px);
-						}
-						
-						to {
-							transform: scale(0.8) translateY(-20px) translateX(0);
-						}
-					}
-				}
-			}
-			
-			&.move_bad {
-				
-				
-				&:first-child {
-					animation: move-right-1 $animation-move-duration $animation-move-ease forwards;
-					@keyframes move-right-1 {
-						0% {
-							transform: translateY(28px) translateX(0px);
-						}
-						
-						20% {
-							transform: translateY(28px) translateX(50px);
-							opacity: 1;
-						}
-						50% {
-							transform: translateY(28px) translateX(150px) scale(0.2);
-							opacity: 0;
-						}
-						to {
-							transform: translateY(28px) translateX(150px) scale(0.2);
-							opacity: 0;
-						}
-					}
-				}
-				
-				&:nth-child(2) {
-					animation: move-right-2 $animation-move-duration $animation-move-ease;
-					@keyframes move-right-2 {
-						0% {
-							transform: scale(0.95) translateY(16px) translateX(0);
-						}
-						
-						20% {
-							transform: scale(0.95) translateY(16px) translateX(40px);
-						}
-						
-						to {
-							transform: scale(0.95) translateY(16px) translateX(0);
-						}
-					}
-				}
-				
-				&:nth-child(3) {
-					animation: move-right-3 $animation-move-duration $animation-move-ease;
-					@keyframes move-right-3 {
-						0% {
-							transform: scale(0.9) translateY(4px) translateX(0);
-						}
-						
-						20% {
-							transform: scale(0.9) translateY(4px) translateX(30px);
-						}
-						
-						to {
-							transform: scale(0.9) translateY(4px) translateX(0);
-						}
-					}
-				}
-				
-				&:nth-child(4) {
-					animation: move-right-4 $animation-move-duration $animation-move-ease;
-					@keyframes move-right-4 {
-						0% {
-							transform: scale(0.85) translateY(-8px) translateX(0);
-						}
-						
-						20% {
-							transform: scale(0.85) translateY(-8px) translateX(20px);
-						}
-						
-						to {
-							transform: scale(0.85) translateY(-8px) translateX(0);
-						}
-					}
-				}
-				
-				&:nth-child(5) {
-					animation: move-right-5 $animation-move-duration $animation-move-ease;
-					@keyframes move-right-5 {
-						0% {
-							transform: scale(0.8) translateY(-20px) translateX(0);
-						}
-						
-						20% {
-							transform: scale(0.8) translateY(-20px) translateX(10px);
-						}
-						
-						to {
-							transform: scale(0.8) translateY(-20px) translateX(0);
-						}
-					}
-				}
-			}
-			
-			&.move_ok {
-				
-				
-				&:first-child {
-					animation: move-down-1 $animation-move-duration $animation-move-ease forwards;
-					@keyframes move-down-1 {
-						0% {
-							transform: translateY(28px);
-						}
-						
-						20% {
-							transform: translateY(78px);
-							opacity: 1;
-						}
-						50% {
-							transform: translateY(128px) scale(0.2);
-							opacity: 0;
-						}
-						to {
-							transform: translateY(128px) scale(0.2);
-							opacity: 0;
-						}
-					}
-				}
-				
-				&:nth-child(2) {
-					animation: move-down-2 $animation-move-duration $animation-move-ease;
-					@keyframes move-down-2 {
-						0% {
-							transform: scale(0.95) translateY(16px);
-						}
-						
-						20% {
-							transform: scale(0.95) translateY(56px);
-						}
-						
-						to {
-							transform: scale(0.95) translateY(16px);
-						}
-					}
-				}
-				
-				&:nth-child(3) {
-					animation: move-down-3 $animation-move-duration $animation-move-ease;
-					@keyframes move-down-3 {
-						0% {
-							transform: scale(0.9) translateY(4px);
-						}
-						
-						20% {
-							transform: scale(0.9) translateY(34px);
-						}
-						
-						to {
-							transform: scale(0.9) translateY(4px);
-						}
-					}
-				}
-				
-				&:nth-child(4) {
-					animation: move-down-4 $animation-move-duration $animation-move-ease;
-					@keyframes move-down-4 {
-						0% {
-							transform: scale(0.85) translateY(-8px);
-						}
-						
-						20% {
-							transform: scale(0.85) translateY(12px);
-						}
-						
-						to {
-							transform: scale(0.85) translateY(-8px);
-						}
-					}
-				}
-				
-				&:nth-child(5) {
-					animation: move-down-5 $animation-move-duration $animation-move-ease;
-					@keyframes move-down-5 {
-						0% {
-							transform: scale(0.8) translateY(-20px);
-						}
-						
-						20% {
-							transform: scale(0.8) translateY(-10px);
-						}
-						
-						to {
-							transform: scale(0.8) translateY(-20px);
-						}
-					}
-				}
-			}
-			
-			&.move_back {
-				
-				
-				&:first-child {
-					transform: scale(0.8) translateY(-20px);
-					z-index: 6;
-					animation: move-up-1 $animation-move-duration $animation-move-ease forwards;
-					@keyframes move-up-1 {
-						0% {
-							transform: scale(1) translateY(28px);
-							z-index: 10;
-						}
-						
-						50% {
-							transform: scale(0.7) translateY(-250px);
-						}
-	
-						to {
-							transform: scale(0.75) translateY(-20px);
-							z-index: 5;
-						}
-					}
+				&.position_0 {
+					
+					transform: translateY(28px) translateX(-150px) scale(0.2) !important;
+					opacity: 0 !important;
 					
 
 				}
 				
 			}
+			
+			&.move_bad {
+				
+				
+				&.position_0 {
+					transform: translateY(28px) translateX(150px) scale(0.2) !important;
+					opacity: 0 !important;
+				}
+				
+			}
+			
+			&.move_ok {
+				
+				
+				&.position_0 {
+					transform: translateY(128px) scale(0.2) !important;
+					opacity: 0 !important;
+				}
+				
+			}
+			
+			&.move_back {
+				
+				
+				&.position_0 {
+					transform: scale(0.75) translateY(-20px) !important;
+					z-index: 1 !important;
+				}
+				
+			}
 
+		}
+		
+		&.animate {
+			.product {
+				transition: all 0.5s ease-in-out;
+				transition-property: opacity transform;
+				
+			}
 		}
 		
 	}
