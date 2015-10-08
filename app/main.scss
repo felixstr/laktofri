@@ -17,6 +17,7 @@ $color-grey-light: #F5F5F5;
 
 
 /* sizes */
+$statusbar-height: 20px;
 $header-height: 50px;
 $footer-height: 50px;
 
@@ -44,27 +45,7 @@ body {
 	-webkit-tap-highlight-color: rgba(0,0,0,0);		
 }
 
-/* header */
-header {
-	position: fixed;
-	height: $header-height;
-	background: $color-header;
-	width: 100vw;
-	z-index: 100;
-	
-	box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.30);
-	
-	.title {
-		color: white;
-		width: 100%;
-		position: absolute;
-		bottom: 7px;
-		text-align: center;
-		font-family: Roboto-Medium;
-		font-size: 15px;
-	}
-}
-
+/* footer */
 footer {
 	position: fixed;
 	z-index: 100;
@@ -80,7 +61,7 @@ footer {
 		
 		display: inline-block;
 		line-height: $footer-height;
-		width: 50%;
+		width: calc((100vw - #{$footer-height}) / 2);
 		text-align: center;
 		
 		font-family: Roboto-Regular;
@@ -94,16 +75,27 @@ footer {
 		&:first-child {
 			background-image: url(images/icon_scan.svg);
 			background-size: 15px;
-			background-position: 50px 16px;
+			background-position: 37px 16px;
 			padding-left: 17px;
 		}
 		
 		&:nth-child(2) {
-			right: 0;
+			right: $footer-height;
 			background-image: url(images/icon_library.svg);
 			background-size: 16px;
-			background-position: 30px 17px;
-			padding-left: 27px;
+			background-position: 15px 17px;
+			padding-left: 25px;
+			border-left: 1px solid $color-blue-light;
+		}
+		
+		&:nth-child(3) {
+			right: 0;
+			height: $footer-height;
+			line-height: $footer-height;
+			width: $footer-height + 1px;
+			font-family: Roboto-Regular;
+			font-size: 21px;
+			border-left: 1px solid $color-blue-light;
 		}
 			
 	}
@@ -111,7 +103,7 @@ footer {
 	.border {
 		position: absolute;
 		height: 2px;
-		width: 50vw;
+		width: calc((100vw - #{$footer-height}) / 2);
 		background: $color-blue-darkest;
 		top:0;
 		left: 0;
@@ -123,6 +115,9 @@ footer {
 		a:first-child {
 			background-color: $color-grey-light;
 		}
+		.border {
+			width: calc(1px + (100vw - #{$footer-height}) / 2);
+		}
 	}
 	&.view_products {
 		a:nth-child(2) {
@@ -130,7 +125,17 @@ footer {
 		}
 		
 		.border {
-			transform: translateX(50vw);
+			transform: translateX(calc((100vw - #{$footer-height}) / 2));
+		}
+	}
+	&.view_help {
+		a:nth-child(3) {
+			background-color: $color-grey-light;
+		}
+		
+		.border {
+			width: $footer-height + 1px;
+			transform: translateX(calc(100vw - #{$footer-height}));
 		}
 	}
 }
@@ -162,7 +167,11 @@ main {
 		&.ng-enter {
 			z-index: 20;
 		}
-		&.products_scan, &.review_products, &.review_scan {
+		&.products_scan, 
+		&.review_products, 
+		&.review_scan,
+		&.help_scan,
+		&.help_products {
 			&.ng-enter {
 				transform: translateX(-100vw) scale3d(0.9, 0.9, 0.9)  translateY($header-height/2);
 			}
@@ -178,7 +187,11 @@ main {
 				}
 			}
 		}
-		&.scan_products, &.products_review {
+		&.scan_products, 
+		&.products_review, 
+		&.scan_help, 
+		&.products_help, 
+		&.review_help {
 			&.ng-enter {
 				transform: translateX(100vw) scale3d(0.9, 0.9, 0.9)  translateY($header-height/2);
 			}
@@ -209,20 +222,19 @@ main {
 section.view {
 	width: 100vw;
 	min-height: 100vh;
-	padding-top: $header-height;
 	position: absolute;
 	top: 0;
 	float: left;
-	padding-bottom: $header-height;
+	padding-bottom: $footer-height;
 	
 	
 	div.bg_wrap {
 		float: left;
 		width: 100%;
-		padding-top: $header-height + 15px;
+		padding-top: $statusbar-height + $header-height + 15px;
 		padding-bottom: 15px;
 		background: $color-blue-light;
-		min-height: calc(100vh - #{$header-height + $footer-height});
+		min-height: calc(100vh - #{$footer-height});
 	}
 }
 
@@ -230,13 +242,14 @@ section.view {
 /**
 * View Scan
 */
+
 section.view.viewScan {
 	background: url(images/bg_scan.png);
 	background-position: top center;
 	background-size: cover;
-	top: $header-height;
-	min-height: calc(100vh - #{$header-height+ $footer-height});
-	padding-top: 15px;
+	top: 0;
+	min-height: calc(100vh - #{$footer-height});
+	padding-top: $statusbar-height+15px;
 	
 	.box_scan {
 		position: absolute;
@@ -297,9 +310,8 @@ section.view.viewScan {
 		
 		opacity: 1;
 		transform: scale(1);
-		
-// 		transition: 0.3s ease-in-out;
-		
+		z-index: 2;
+				
 		.title {
 			color: white;
 		}
@@ -377,9 +389,11 @@ section.view.viewScan {
 			}
 		}
 		
+		&.animate {
+			transition: 0.4s ease-in-out;
+		}
 		&.toLibrary {
-			transition: 0.5s ease-in-out;
-			transform: translateX(-40vw) scale(0.2);
+			transform: translateX(-40vw) scale(0.2) !important;
 			opacity: 0;
 		}
 		
@@ -389,11 +403,11 @@ section.view.viewScan {
 		position: absolute;
 		top: 375px;
 		left: 10px;
-// 		transition: 0.2s 0.5s ease;
+
 		opacity: 1;
 		
 		&.toLibrary {
-			animation: pop 0.3s 0.4s forwards;
+			animation: pop 0.3s 0.3s forwards;
 			
 			@keyframes pop {
 				0% { transform: scale(1); }
@@ -416,15 +430,12 @@ section.view.viewScan {
 */
 section.view.viewProducts {
 	
-	
-	padding-top: $header-height;
-	
 	nav.filter {
 		position: fixed;
 		z-index: 100;
-		top: $header-height;
+		top: 0;
 		width: 100vw;
-		height: 50px;
+		height: $header-height+$statusbar-height;
 		background: $color-blue-dark;
 		
 		box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.30);
@@ -437,6 +448,7 @@ section.view.viewProducts {
 			border: none;
 			background: none;
 			position: relative;
+			margin-top: $statusbar-height;
 			
 			div {
 				background: $color-blue-shadow;
@@ -580,7 +592,7 @@ section.view.viewProducts {
 			.product {
 				position: absolute;
 				z-index: 10;
-				transform: translateX(00px);
+// 				transform: translateX(00px);
 				
 // 				transition: all 2s ease-in-out;
 				
@@ -607,18 +619,20 @@ section.view.viewProducts {
 	
 				
 				&.open {
-					transform: translateX(-280px);
+					transform: translateX(-280px) !important;
 					
-					animation: product-left 0.5s ease-out;
+					/*
+animation: product-left 2s ease-out !important;
 					
 					@keyframes product-left {
 						from, 60%, to {
 							animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
 						}
-						0% { transform: translateX(0); }
-						60% { transform: translateX(-300px); }
-						to { transform: translateX(-280px); }
+// 						0% { transform: translateX(0) !important; }
+						60% { transform: translateX(-300px) !important; }
+						to { transform: translateX(-280px) !important; }
 					}
+*/
 					
 					button {
 						opacity: 0;
@@ -640,6 +654,10 @@ section.view.viewProducts {
 					}
 
 				}
+				
+				&.animate {
+					transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+				}
 			}
 							
 			button {
@@ -647,7 +665,7 @@ section.view.viewProducts {
 				top: $product_height/2 - 17px;
 				width: 34px;
 				height: 34px;
-				
+				opacity: 0;
 				
 				border: none;
 				background: none;
@@ -790,14 +808,20 @@ section.view.viewProducts {
 * View Review
 */
 section.view.viewReview {
-	padding-top: $header-height;
+	.statusbar-back {
+		position: fixed;
+		top: 0;
+		width: 100vw;
+		height: $statusbar-height;
+		background: $color-blue-dark;
+	}
 	
 	a.link_back {
 		position: fixed;
 		z-index: 100;
-		top: $header-height;
+		top: $statusbar-height;
 		width: 100vw;
-		height: 50px;
+		height: $header-height;
 		background: $color-blue-dark;
 		color: white;
 		font-family: Roboto-Regular;
@@ -816,6 +840,7 @@ section.view.viewReview {
 	}
 	
 	.text {
+		margin-top: 15px;
 		width: $product_width;
 		text-align: center;
 		float: left;
@@ -826,21 +851,21 @@ section.view.viewReview {
 		
 		
 		h1 {			
-			font-size: 15px;
-			line-height: 21px;
+			font-size: 17px;
+			line-height: 25px;
 			font-weight: normal;
 		}
 		
 		h2 {
-			margin-top: 20px;
-			font-size: 12px;
+			margin-top: 25px;
+			font-size: 14px;
 			line-height: 15px;
 			font-weight: normal;
 			
 			
 			span.count {
 				display: inline-block;
-				font-size: 34px;
+				font-size: 28px;
 				background: $color-blue;
 				line-height: 50px;
 				min-width: 50px;
@@ -850,6 +875,7 @@ section.view.viewReview {
 				border-radius: 25px;
 				padding: 0 15px;
 				margin-bottom: 10px;
+				font-family: Roboto-Medium;
 			}
 		}
 	}
@@ -1221,7 +1247,7 @@ section.view.viewReview {
 	.icon_smiley_good {
 		position: absolute;
 		left: calc(50vw - #{$product_width/2} - 30px - 15px);
-		top: 375px;
+		top: 373px;
 		width: 30px;
 		
 		&.move_good {
@@ -1231,7 +1257,7 @@ section.view.viewReview {
 	.icon_smiley_ok {
 		position: absolute;
 		left: calc(50vw - 15px);
-		top: 490px;
+		top: 488px;
 		width: 30px;
 		
 		&.move_ok {
@@ -1241,7 +1267,7 @@ section.view.viewReview {
 	.icon_smiley_bad {
 		position: absolute;
 		left: calc(50vw + #{$product_width/2} + 15px);
-		top: 375px;
+		top: 373px;
 		width: 30px;
 		
 		&.move_bad {

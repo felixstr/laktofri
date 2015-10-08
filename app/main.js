@@ -5,7 +5,7 @@ Date.prototype.yyyymmdd = function() {
 	return yyyy +'-'+ (mm[1]?mm:"0"+mm[0]) +'-'+ (dd[1]?dd:"0"+dd[0]); // padding
 };
 
-angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate', 'ngTouch'])
+angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate', 'ngTouch', 'hmTouchEvents'])
 	.config(function($stateProvider, $urlRouterProvider) {
 		$urlRouterProvider.otherwise('/');
 		
@@ -25,6 +25,10 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate', 'ngTouch'])
 			.state('review', {
 				url: '/review',
 				templateUrl: 'view/review.html'
+			})
+			.state('help', {
+				url: '/help',
+				templateUrl: 'view/help.html'
 			});
 			
 	})
@@ -132,55 +136,90 @@ var element = angular.element( document.querySelector( '#product' ) );
 		
 		}
 		
-		scanC.addToLibrary = function(item) {
-			if (item.laktose) {
-				scanC.status = 'toLibrary';
-				
-				$timeout(function() {
-					
-					var itemChange = false;
-					var date = new Date();
-					var currentPosition = 0;
-					
-					angular.forEach(scanC.product_list, function (value, key) {
-						if (value.stack_position > currentPosition) {
-							currentPosition = value.stack_position;
-						}
-						if (item.barcode == value.barcode) {
-							itemChange = key;
-							
-							
-							value.reviewed = false;
-							value.review_date = '';
-							value.review_state = '';
-							value.review_state_filter = '';
-						}
-					});
-					
-					
-					
-					if (!itemChange) {
-						scanC.product_list.push({
-							barcode: item.barcode,
-							name: item.name,
-							image: item.image,
-							reviewed: false,
-							review_date: '',
-							review_state: '',
-							review_state_filter: '',
-							stack_position: currentPosition+1
-						})
-					} else {
-						scanC.product_list[itemChange].stack_position = currentPosition+1;
-					}
-					
-					
-					scanC.currentItem = null;
-					scanC.status = '';
-				
-				}, 1000);
-
+		scanC.addToLibrary = function(event, item) {
+// 			var item = scanC.currentItem;
 			
+			event.element.removeClass('animate');
+			
+			if (item.laktose) {
+				
+				
+				
+				event.element.css({
+// 					'margin-left': event.deltaX+'px'
+					'transform': 'translateX('+event.deltaX+'px)'
+				});
+				
+		
+				
+				if (event.isFinal) {
+					
+					event.element.addClass('animate');
+					
+					if (event.deltaX < -60) {
+						
+						
+						
+						scanC.status = 'toLibrary';
+						
+					
+				
+						$timeout(function() {
+							
+							var itemChange = false;
+							var date = new Date();
+							var currentPosition = 0;
+							
+							angular.forEach(scanC.product_list, function (value, key) {
+								if (value.stack_position > currentPosition) {
+									currentPosition = value.stack_position;
+								}
+								if (item.barcode == value.barcode) {
+									itemChange = key;
+									
+									
+									value.reviewed = false;
+									value.review_date = '';
+									value.review_state = '';
+									value.review_state_filter = '';
+								}
+							});
+							
+							
+							
+							if (!itemChange) {
+								scanC.product_list.push({
+									barcode: item.barcode,
+									name: item.name,
+									image: item.image,
+									reviewed: false,
+									review_date: '',
+									review_state: '',
+									review_state_filter: '',
+									stack_position: currentPosition+1
+								})
+							} else {
+								scanC.product_list[itemChange].stack_position = currentPosition+1;
+							}
+							
+							
+							scanC.currentItem = null;
+							scanC.status = '';
+							
+							
+							event.element.css({
+								'transform': 'translateX(0px)'
+							});
+						
+						}, 600);
+		
+					} else {
+						event.element.css({
+							'transform': 'translateX(0px)'
+						});
+					}
+				
+				}
 			}
 			
 		}
@@ -208,12 +247,53 @@ var element = angular.element( document.querySelector( '#product' ) );
 			}
 		}
 		
+		productC.moveProduct = function(event, item) {
+			event.element.removeClass('animate');
+			
+			if (event.deltaX < 0) {
+				event.element.css({
+					'transform': 'translateX('+event.deltaX+'px)'
+				});
+			} else {
+				productC.itemEdit = null;
+			}
+			
+			if (event.isFinal) {
+				
+				if (event.deltaX < 0) {
+					event.element.addClass('animate');
+				}
+				
+				if (event.deltaX < -100) {
+					
+					productC.itemEdit = item;
+					
+					$timeout(function() {
+						event.element.css({
+							'transform': 'translateX(0px)'
+						});
+						
+						event.element.removeClass('animate');
+					}, 300);
+
+				} else {
+					
+					
+					event.element.css({
+						'transform': 'translateX(0px)'
+					});
+				}
+			}
+			
+			
+		}
+		
 		productC.openEdit = function(item) {
 			productC.itemEdit = item;
 		}
 		
 		productC.changeReview = function(item, state) {
-// 			productC.itemEdit = null;
+
 			var reviewItem = null;
 			
 			angular.forEach(productC.product_list, function (value, key) {
@@ -324,6 +404,13 @@ var element = angular.element( document.querySelector( '#product' ) );
 	
 
 // 		console.log(product_list);
+		
+	})
+	.controller('helpController', function(siteProperties) {
+		var helpC = this; // $scope
+		
+		siteProperties.title = 'Hilfe';
+		siteProperties.viewName = 'help';
 		
 	})
 	.filter('productFilter', function() {

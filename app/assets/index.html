@@ -17,11 +17,6 @@
 	</head>
 	<body ng-controller="mainController as mainC">
 		
-		<header>
-			<div class="icon_ablage"></div>
-			<div class="title">{{mainC.siteProperties.title}}</div>
-		</header>
-		
 		<main ui-view ng-class="{animate: path !== '/'}" class="{{ pageChange }}">
 			
 		</main>
@@ -30,6 +25,7 @@
 			
 			<a ui-sref="scan">Scanner</a>
 			<a ui-sref="products">Meine Produkte</a>
+			<a ui-sref="help">?</a>
 			
 			<div class="border"></div>
 		</footer>
