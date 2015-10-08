@@ -23,9 +23,14 @@
 		
 		<footer class="view_{{mainC.siteProperties.viewName}}">
 			
-			<a ui-sref="scan">Scanner</a>
-			<a ui-sref="products">Meine Produkte <span ng-if="mainC.siteProperties.reviewCount > 0" class="count value-{{mainC.siteProperties.reviewCount}}">{{mainC.siteProperties.reviewCount}}</span></a>
-			<a ui-sref="help">?</a>
+			<a ui-sref="scan">
+				<img ng-src="images/icon_scan.svg" />
+			</a>
+			<a ui-sref="products">
+				<img ng-src="images/icon_library.svg" />
+				<span ng-if="mainC.siteProperties.reviewCount > 0" class="count value-{{mainC.siteProperties.reviewCount}}">{{mainC.siteProperties.reviewCount}}</span>
+			</a>
+			<a ui-sref="help"><span>?</span></a>
 			
 			<div class="border"></div>
 		</footer>
