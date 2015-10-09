@@ -1,9 +1,15 @@
+var scanditEnable = true;
+
+
 Date.prototype.yyyymmdd = function() {
 	var yyyy = this.getFullYear().toString();
 	var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
 	var dd  = this.getDate().toString();
 	return yyyy +'-'+ (mm[1]?mm:"0"+mm[0]) +'-'+ (dd[1]?dd:"0"+dd[0]); // padding
 };
+
+
+
 
 angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate', 'ngTouch', 'hmTouchEvents'])
 	.config(function($stateProvider, $urlRouterProvider) {
@@ -12,11 +18,15 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate', 'ngTouch', 'hm
 		$stateProvider
 			.state('/', {
 				url: '/',
-				templateUrl: 'view/scan.html'
+				templateUrl: 'view/scan'+(scanditEnable ? '2' : '')+'.html'
 			})
 			.state('scan', {
 				url: '/scan',
 				templateUrl: 'view/scan.html'
+			})
+			.state('scan2', {
+				url: '/scan2',
+				templateUrl: 'view/scan2.html'
 			})
 			.state('products', {
 				url: '/products',
@@ -30,7 +40,10 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate', 'ngTouch', 'hm
 				url: '/help',
 				templateUrl: 'view/help.html'
 			});
-			
+		
+		
+		
+		
 	})
 	.run(function ($rootScope, $location) {
 		$rootScope.$on("$locationChangeStart", function (event, next, current) {
@@ -41,11 +54,67 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate', 'ngTouch', 'hm
 			
 			if (from == '' && to != '') {
 				from = 'scan';
+				if (scanditEnable) {
+					from = 'scan2';
+				}
 			}
 			var pageChange = (from == '' ? '' : from+'_')+to;
+			
+			if (scanditEnable) {
+				if (from == 'scan2') {
+					Scandit.hide();
+				}
+			}
 
 			$rootScope.pageChange = pageChange;
 		});
+		
+		
+		/**
+		* codecheck start session aufbau
+		*/
+		/*
+
+		var username = 'laktofri';
+		var secretHex = '1D15FD029289D2C0D5E07569AC5DF7CAAF1FF88DE712F392B1BCA76E9A980A0A';
+		var secretBytes = CryptoJS.enc.Hex.parse(secretHex);
+		var authType = 'DigestQuick';
+		var clientNonceBytes = CryptoJS.lib.WordArray.random(16);
+		var clientNonceBase64 = clientNonceBytes.toString(CryptoJS.enc.Base64);
+		
+		var authData = {
+			authType: authType,
+			username: username,
+			clientNonce: clientNonceBase64,
+			deviceId: "LaktofriApp"
+		};
+
+		console.log('authData', authData);
+		
+		$.ajax("http://www.codecheck.info/WebService/rest/session/auth", {
+			type: 'POST',
+			contentType: "application/json",
+			dataType: "json",
+			data: JSON.stringify(authData),
+			success: function(data, textStatus, jqXHR) {
+				console.log('data', data);
+				console.log('textStatus', textStatus);
+				console.log('jqXHR', jqXHR);
+			},
+			fail: function(error) {
+				console.log('ERROR', error);
+			}
+		});
+*/
+
+		/**
+		* codecheck end
+		*/
+		
+		if (scanditEnable) {
+			Scandit.start();	
+		}
+				
 	})
 	.controller('mainController', function($scope, $state, siteProperties) {
 		var mainCtrl = this;
@@ -130,6 +199,195 @@ var element = angular.element( document.querySelector( '#product' ) );
 					        
 				        });
 */
+				        scanC.status = '';
+				        scanC.currentItem = newItem;
+			        }, 1500);
+		        }
+
+     	    }    
+		
+		}
+		
+		scanC.addToLibrary = function(event, item) {
+// 			var item = scanC.currentItem;
+			
+			event.element.removeClass('animate');
+			
+			if (item.laktose) {
+				
+				
+				
+				event.element.css({
+					'transform': 'translateX('+event.deltaX+'px)'
+				});
+				
+		
+				
+				if (event.isFinal) {
+					
+					event.element.addClass('animate');
+					
+					if (event.deltaX < -60) {
+						
+						
+						
+						scanC.status = 'toLibrary';
+						
+					
+				
+						$timeout(function() {
+							
+							var itemChange = false;
+							var date = new Date();
+							var currentPosition = 0;
+							
+							angular.forEach(scanC.product_list, function (value, key) {
+								if (value.stack_position > currentPosition) {
+									currentPosition = value.stack_position;
+								}
+								if (item.barcode == value.barcode) {
+									itemChange = key;
+									
+									
+									value.reviewed = false;
+									value.review_date = '';
+									value.review_state = '';
+									value.review_state_filter = '';
+								}
+							});
+							
+							
+							
+							if (!itemChange) {
+								scanC.product_list.push({
+									barcode: item.barcode,
+									name: item.name,
+									image: item.image,
+									reviewed: false,
+									review_date: '',
+									review_state: '',
+									review_state_filter: '',
+									stack_position: currentPosition+1
+								})
+							} else {
+								scanC.product_list[itemChange].stack_position = currentPosition+1;
+							}
+							
+							
+							scanC.currentItem = null;
+							scanC.status = '';
+							siteProperties.reviewCount = Review.count();
+							
+							
+							event.element.css({
+								'transform': 'translateX(0px)'
+							});
+						
+						}, 600);
+		
+					} else {
+						event.element.css({
+							'transform': 'translateX(0px)'
+						});
+					}
+				
+				}
+			}
+			
+		}
+		
+	})
+	.controller('scan2Controller', function($rootScope, $animate, $timeout, siteProperties, product_list, product_list_codecheck, Review) {
+		var scanC = this; // $scope
+		
+		siteProperties.title = 'Scanner';
+		siteProperties.viewName = 'scan';
+		siteProperties.reviewCount = Review.count();
+		
+		
+		scanC.currentItem = null;
+		scanC.currentItemAddon = null;
+		scanC.product_list = product_list;
+		scanC.product_list_codecheck = product_list_codecheck;
+		scanC.status = '';
+		
+		scanC.barcode = '';
+		
+		
+		if (scanditEnable) {
+			$timeout(function() {
+				Scandit.show();
+			}, 800);
+			
+			Scandit.onSuccess = function(data) {
+				console.log('onSuccess', data);
+
+				$rootScope.$apply(function(){
+					scanC.scan(data[0]);
+				});
+			}
+		}
+		
+		
+		
+		var barcode_array = [];
+		angular.forEach(scanC.product_list, function (value, key) {
+			barcode_array.push(value.barcode);
+		});
+		angular.forEach(scanC.product_list_codecheck, function (value, key) {
+			barcode_array.push(value.barcode);
+		});
+
+		scanC.scan = function(barcode) {
+			console.log('scanC.status', scanC.status);
+			console.log('scanC.currentItem', scanC.currentItem);
+			
+			if (scanC.currentItem != null) {
+				scanC.currentItem = null;
+				scanC.status = '';
+			} else {
+				if (barcode == undefined) {
+					barcode = barcode_array[Math.floor(Math.random() * barcode_array.length)];
+				}
+				console.log(barcode);
+				
+				var newItem = null;
+	
+				angular.forEach(scanC.product_list, function (value, key) {
+			        if (barcode == value.barcode) {
+				        newItem = {
+					        barcode: value.barcode,
+					        name: value.name,
+					        image: value.image,
+					        reviewed: value.reviewed,
+					        review_state: value.review_state,
+					        review_date: value.review_date,
+					        laktose: true
+				        };
+		            }
+		        });	
+		        
+		        if (newItem == null) {
+			        angular.forEach(scanC.product_list_codecheck, function (value, key) {
+				        if (barcode == value.barcode) {
+					        newItem = {
+						        barcode: value.barcode,
+						        name: value.name,
+						        image: value.image,
+						        reviewed: false,
+						        review_state: '',
+						        review_date: '',
+						        laktose: value.laktose
+					        };
+			            }
+			        });
+		        }
+		        
+		        
+		        if (newItem != null) {
+			        scanC.status = 'load';
+			        $timeout(function() {
+
 				        scanC.status = '';
 				        scanC.currentItem = newItem;
 			        }, 1500);
@@ -616,8 +874,8 @@ productC.openEdit = function(item) {
 	        laktose: true
 		},
 		{
-			barcode: '2130050000007',
-			name: 'Bonta Divina Delizia Vanille (1,54 EUR/100 g)',
+			barcode: '90494741',
+			name: 'test - Bonta Divina Delizia Vanille (1,54 EUR/100 g)',
 	        image: 'http://www.codecheck.info/img/28370/1',
 	        laktose: true
 		},
@@ -625,6 +883,12 @@ productC.openEdit = function(item) {
 			barcode: '20430313',
 			name: 'Biotrend - Bio Paprika-Lyoner Spitzenqualität',
 	        image: 'http://www.codecheck.info/img/48536022/1',
+	        laktose: false
+		},
+		{
+			barcode: '7616800816203',
+			name: 'Schweizer Alpenkräuter',
+	        image: 'http://www.codecheck.info/img/48871059/1',
 	        laktose: false
 		}
 	])
@@ -677,3 +941,16 @@ productC.openEdit = function(item) {
     });
 
 
+
+
+
+	        
+	        
+			
+if (scanditEnable) {
+    document.addEventListener('deviceready', function() {
+		angular.bootstrap(document, ['laktofriApp']);
+	}, false);
+} else {
+	angular.bootstrap(document, ['laktofriApp']);
+}

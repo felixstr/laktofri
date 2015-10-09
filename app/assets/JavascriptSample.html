@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Digest Quick Authentication</title>
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha256.js"></script>
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/components/enc-base64-min.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+	<form>
+	
+	</form>
+	<script type="text/javascript">
+
+
+var codecheckAuthorization = null;
+
+function executeRequest(url, success, error) {
+
+	if (!codecheckAuthorization) {
+		startSession(function() {
+				executeRequestInner(url, success, error);
+			}, function (errorMessage) {
+				error(errorMessage);
+			}
+		);
+	} else {
+		executeRequestInner(url, success, error);
+	}
+}
+
+function executeRequestInner(url, success, error) {
+	$.ajax(url, {
+		type: "GET",
+		dataType: "json",
+		headers: { "Authorization": codecheckAuthorization },
+		success: function(data, textStatus, jqXHR) {
+			if (data.error) {
+				error(data.error);
+			} else {
+				success(data);
+			}
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+			error(errorThrown);
+		}
+	});
+}
+
+function startSession(success, error) {
+	var username = 'laktofri';
+	var secretHex = '1D15FD029289D2C0D5E07569AC5DF7CAAF1FF88DE712F392B1BCA76E9A980A0A';
+	var secretBytes = CryptoJS.enc.Hex.parse(secretHex);
+	var authType = 'DigestQuick';
+	var clientNonceBytes = CryptoJS.lib.WordArray.random(16);
+	var clientNonceBase64 = clientNonceBytes.toString(CryptoJS.enc.Base64);
+
+	var authData = {
+		authType: authType,
+		username: username,
+		clientNonce: clientNonceBase64,
+		deviceId: "SuperDuperApp"
+	};
+	
+	$.ajax("http://www.codecheck.info/WebService/rest/session/auth", {
+		type: "POST",
+		contentType: "application/json",
+		dataType: "json",
+		data: JSON.stringify(authData),
+		success: function(data, textStatus, jqXHR) {
+			var authResponse = data.result;
+			var usernameBytes = CryptoJS.enc.Utf8.parse(username);
+			var nonceBytes = CryptoJS.enc.Base64.parse(authResponse.nonce);
+			var hashInputBytes = usernameBytes.concat(nonceBytes).concat(clientNonceBytes);
+			var hashBytes = CryptoJS.HmacSHA256(hashInputBytes, secretBytes);
+			var mac = hashBytes.toString(CryptoJS.enc.Base64);
+
+			codecheckAuthorization = authType + ' nonce="' + authResponse.nonce + '",mac="' + mac + '"';
+
+			success();
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+			error(errorThrown);
+		}
+	});
+}
+
+// Request 1
+executeRequest("http://www.codecheck.info/WebService/rest/prod/id/1/324303", function(data) {
+		alert("Success");
+
+		// Request 2
+		executeRequest("http://www.codecheck.info/WebService/rest/prod/id/33554432/779963", function(data) {
+				alert("Success");
+			}, function(errorMsg) {
+				alert("Error: " + errorMsg);
+			}
+		);
+
+	}, function(errorMsg) {
+		alert("Error: " + errorMsg);
+	}
+);
+
+
+
+
+	</script>
+</body>
+</html>

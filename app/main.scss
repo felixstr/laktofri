@@ -169,7 +169,7 @@ footer {
 }
 */
 $button_width: 80px;
-$button_height: 55px;
+$button_height: 50px;
 footer {
 	position: fixed;
 	z-index: 100;
@@ -187,10 +187,10 @@ footer {
 		width: $button_width;
 		
 		text-align: center;
-		padding-top: 17px;
+		padding-top: 15px;
 		
 		img {
-			height: 22px;
+			height: 20px;
 		}
 		
 		&:first-child {
@@ -237,7 +237,7 @@ footer {
 			color: $color-blue-dark;
 			font-family: roboto-Medium;
 			right: 0;
-			padding-top: 15px;
+			padding-top: 11px;
 			
 			span {
 				display: inline-block;
@@ -317,10 +317,14 @@ main {
 		&.ng-enter {
 			z-index: 20;
 		}
+		
 		&.products_scan, 
+		&.products_scan2, 
 		&.review_products, 
 		&.review_scan,
+		&.review_scan2,
 		&.help_scan,
+		&.help_scan2,
 		&.help_products {
 			&.ng-enter {
 				transform: translateX(-100vw) scale3d(0.9, 0.9, 0.9)  translateY($header-height/2);
@@ -338,8 +342,10 @@ main {
 			}
 		}
 		&.scan_products, 
+		&.scan2_products, 
 		&.products_review, 
 		&.scan_help, 
+		&.scan2_help, 
 		&.products_help, 
 		&.review_help {
 			&.ng-enter {
@@ -978,10 +984,10 @@ section.view.viewReview {
 	
 	.text {
 		margin-top: 15px;
-		width: $product_width;
+		width: 300px;
 		text-align: center;
 		float: left;
-		margin-left: calc(100vw/2 - 265px/2);
+		margin-left: calc(100vw/2 - 300px/2);
 		text-transform: uppercase;
 		font-family: Roboto-Regular;
 		color: $color-blue-dark;	

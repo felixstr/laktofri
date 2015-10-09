@@ -1,0 +1,21 @@
+<section class="view viewScan" ng-controller="scan2Controller as scanC">
+	<div class="box_scan" ng-class="{'animate': scanC.currentItem == null && scanC.status != 'load'}" hm-tap="scanC.scan()">
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+	</div>
+	
+	<div id="product" ng-show="scanC.status == 'load' || scanC.currentItem != null" ng-class="[scanC.status, {'load': scanC.load}, {'reviewed': scanC.currentItem.reviewed}, {'nok': scanC.currentItem.laktose}, {'ok': !scanC.currentItem.laktose}]" class="product {{scanC.currentItem != null && scanC.currentItem.review_state != '' ? 'review_'+scanC.currentItem.review_state : ''}}" hm-panend="scanC.addToLibrary($event, scanC.currentItem)" hm-panmove="scanC.addToLibrary($event, scanC.currentItem)">
+		<div class="title">{{scanC.currentItem.name}}</div>
+		<img class="picture" ng-show="scanC.currentItem != null" ng-src="{{scanC.currentItem.image}}" />
+		<div class="footer">Bewertet: {{scanC.currentItem.review_date | date:'dd.MM.yyyy'}}</div>		
+	</div>
+	
+	<div class="dropZoneLibrary" ng-show="scanC.currentItem != null && scanC.currentItem.laktose" ng-class="[scanC.status]">
+		<img src="images/icon_library_round.svg" />
+	</div>
+	
+	<div style="position: absolute; bottom: 100px; background: green;">{{ scanC.status }}</div>
+</section>
+
