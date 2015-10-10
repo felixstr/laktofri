@@ -1,4 +1,4 @@
-var scanditEnable = true;
+var scanditEnable = false;
 
 
 Date.prototype.yyyymmdd = function() {
@@ -11,7 +11,7 @@ Date.prototype.yyyymmdd = function() {
 
 
 
-angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate', 'ngTouch', 'hmTouchEvents'])
+angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEvents'])
 	.config(function($stateProvider, $urlRouterProvider) {
 		$urlRouterProvider.otherwise('/');
 		
@@ -45,22 +45,23 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate', 'ngTouch', 'hm
 		
 		
 	})
-	.run(function ($rootScope, $location) {
+	.run(function ($rootScope, $location, siteProperties) {
 		$rootScope.$on("$locationChangeStart", function (event, next, current) {
 			$rootScope.path = $location.path();
-			
+// 			console.log('siteProperties', siteProperties.scanditEnable);
 			var from = current.split('/').reverse()[0];
 			var to = next.split('/').reverse()[0];
 			
 			if (from == '' && to != '') {
 				from = 'scan';
-				if (scanditEnable) {
+				if (siteProperties.scanditEnable) {
 					from = 'scan2';
 				}
 			}
 			var pageChange = (from == '' ? '' : from+'_')+to;
 			
-			if (scanditEnable) {
+			console.log('from', from);
+			if (siteProperties.scanditEnable) {
 				if (from == 'scan2') {
 					Scandit.hide();
 				}
@@ -123,7 +124,7 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate', 'ngTouch', 'hm
 
 
 	})
-	.controller('scanController', function($animate, $timeout, siteProperties, product_list, product_list_codecheck, Review) {
+	.controller('scanController', function($scope, $animate, $timeout, siteProperties, product_list, product_list_codecheck, Review) {
 		var scanC = this; // $scope
 		
 		siteProperties.title = 'Scanner';
@@ -136,6 +137,7 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate', 'ngTouch', 'hm
 		scanC.product_list = product_list;
 		scanC.product_list_codecheck = product_list_codecheck;
 		scanC.status = '';
+		
 		
 		
 		var barcode_array = [];
@@ -190,15 +192,7 @@ angular.module('laktofriApp', ['ui.router', 'swipe', 'ngAnimate', 'ngTouch', 'hm
 		        if (newItem != null) {
 			        scanC.status = 'load';
 			        $timeout(function() {
-				        /*
-var element = angular.element( document.querySelector( '#product' ) );
-				        console.log('product', element);
-				        $animate.leave(element, function(elem, phase) {
-					        console.log(elem);
-					        console.log(phase);
-					        
-				        });
-*/
+
 				        scanC.status = '';
 				        scanC.currentItem = newItem;
 			        }, 1500);
@@ -297,7 +291,7 @@ var element = angular.element( document.querySelector( '#product' ) );
 		}
 		
 	})
-	.controller('scan2Controller', function($rootScope, $animate, $timeout, siteProperties, product_list, product_list_codecheck, Review) {
+	.controller('scan2Controller', function($scope, $rootScope, $animate, $timeout, $interval, siteProperties, product_list, product_list_codecheck, Review) {
 		var scanC = this; // $scope
 		
 		siteProperties.title = 'Scanner';
@@ -306,18 +300,38 @@ var element = angular.element( document.querySelector( '#product' ) );
 		
 		
 		scanC.currentItem = null;
-		scanC.currentItemAddon = null;
 		scanC.product_list = product_list;
 		scanC.product_list_codecheck = product_list_codecheck;
 		scanC.status = '';
 		
 		scanC.barcode = '';
 		
+		var lastItem = null;
+		var lastScan = null;
 		
-		if (scanditEnable) {
+		var interval = $interval(function() {
+
+			var now = new Date().getTime();
+			// offenes prodult schliessen falls es länger als 3 sekunden angezeigt wird			
+			if (scanC.currentItem != null && lastItem == scanC.currentItem && now-lastScan > 6000 && lastScan != null) {
+				scanC.currentItem = null;
+				scanC.status = '';
+				scanC.barcode = '';
+				Scandit.vibrate(true);
+			}
+			lastItem = scanC.currentItem;
+		}, 1000);
+		
+		$scope.$on('$destroy', function() {
+			console.log('destroy- scan2');
+			$interval.cancel(interval);
+		});
+		
+		
+		if (siteProperties.scanditEnable) {
 			$timeout(function() {
 				Scandit.show();
-			}, 800);
+			}, 800); // after view-transition
 			
 			Scandit.onSuccess = function(data) {
 				console.log('onSuccess', data);
@@ -339,19 +353,16 @@ var element = angular.element( document.querySelector( '#product' ) );
 		});
 
 		scanC.scan = function(barcode) {
-			console.log('scanC.status', scanC.status);
-			console.log('scanC.currentItem', scanC.currentItem);
+			console.log(barcode);
+			Scandit.vibrate(false);
 			
-			if (scanC.currentItem != null) {
-				scanC.currentItem = null;
-				scanC.status = '';
-			} else {
-				if (barcode == undefined) {
-					barcode = barcode_array[Math.floor(Math.random() * barcode_array.length)];
-				}
-				console.log(barcode);
-				
+			lastScan = new Date().getTime();
+			
+			if (barcode != scanC.barcode) {
+				scanC.barcode = barcode
+
 				var newItem = null;
+
 	
 				angular.forEach(scanC.product_list, function (value, key) {
 			        if (barcode == value.barcode) {
@@ -367,37 +378,55 @@ var element = angular.element( document.querySelector( '#product' ) );
 		            }
 		        });	
 		        
-		        if (newItem == null) {
-			        angular.forEach(scanC.product_list_codecheck, function (value, key) {
-				        if (barcode == value.barcode) {
-					        newItem = {
-						        barcode: value.barcode,
-						        name: value.name,
-						        image: value.image,
-						        reviewed: false,
-						        review_state: '',
-						        review_date: '',
-						        laktose: value.laktose
-					        };
-			            }
-			        });
-		        }
+		        scanC.status = 'load';
 		        
+		        $.ajax("http://felixstricker.ch/zhdk/mui/codecheck.php?c="+barcode, {
+					type: 'GET',
+					contentType: "application/json",
+					success: function(data, textStatus, jqXHR) {
+						console.log('data', data);
+						
+						if (data.status == 'found') {
+							if (newItem == null) {
+								newItem = {
+							        barcode: barcode,
+							        name: data.name,
+							        image: data.img_src,
+							        reviewed: false,
+							        review_state: '',
+							        review_date: '',
+							        laktose: data.laktose
+						        };
+							} else {
+								newItem.name = data.name;
+								newItem.image = data.img_src;
+							}
+						} else {
+							console.log('no complete product found on codecheck');
+						}
+						
+						if (newItem == null) {
+					        console.log('kein produkt gefunden!');
+				        } else {
+					        
+// 					        $timeout(function() {
+								lastScan = new Date().getTime();
+						        scanC.status = '';
+						        scanC.currentItem = newItem;
+// 					        }, 1500);
+				        }
+						
+					},
+					fail: function(error) {
+						console.log('ERROR', error);
+					}
+				});
 		        
-		        if (newItem != null) {
-			        scanC.status = 'load';
-			        $timeout(function() {
-
-				        scanC.status = '';
-				        scanC.currentItem = newItem;
-			        }, 1500);
-		        }
-
-     	    }    
+			}
 		
 		}
 		
-		scanC.addToLibrary = function(event, item) {
+		scanC.moveProduct = function(event, item) {
 // 			var item = scanC.currentItem;
 			
 			event.element.removeClass('animate');
@@ -462,7 +491,8 @@ var element = angular.element( document.querySelector( '#product' ) );
 								scanC.product_list[itemChange].stack_position = currentPosition+1;
 							}
 							
-							
+							Scandit.vibrate(true);
+							scanC.barcode = '';
 							scanC.currentItem = null;
 							scanC.status = '';
 							siteProperties.reviewCount = Review.count();
@@ -732,6 +762,18 @@ productC.openEdit = function(item) {
 		
 		siteProperties.title = 'Hilfe';
 		siteProperties.viewName = 'help';
+		helpC.siteProperties = siteProperties;
+		
+		helpC.changeMode = function() {
+			console.log('changeMode', siteProperties.scanditEnable);
+			if (siteProperties.scanditEnable) {
+				siteProperties.scanditEnable = false;
+				Scandit.stop();
+			} else {
+				siteProperties.scanditEnable = true;
+				Scandit.start();
+			}
+		}
 		
 	})
 	.filter('productFilter', function() {
@@ -874,7 +916,7 @@ productC.openEdit = function(item) {
 	        laktose: true
 		},
 		{
-			barcode: '90494741',
+			barcode: '8003938005224',
 			name: 'test - Bonta Divina Delizia Vanille (1,54 EUR/100 g)',
 	        image: 'http://www.codecheck.info/img/28370/1',
 	        laktose: true
@@ -895,7 +937,8 @@ productC.openEdit = function(item) {
 	.value('siteProperties', {
 		title: '',
 		viewName: '',
-		reviewCount: 0
+		reviewCount: 0,
+		scanditEnable: scanditEnable
 	})
 	.factory('Review', function(product_list) {
         return {

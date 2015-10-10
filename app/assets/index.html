@@ -18,7 +18,7 @@
 		<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/components/enc-base64-min.js"></script>
 		
 		
-  		<script type="text/javascript" src="cordova.js"></script>
+   		<script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/scandit.js"></script>
         
       
@@ -32,7 +32,10 @@
 		
 		<footer class="view_{{mainC.siteProperties.viewName}}">
 			
-			<a ui-sref="scan2">
+			<a ui-sref="scan" ng-if="!mainC.siteProperties.scanditEnable">
+				<img ng-src="images/icon_scan.svg" />
+			</a>
+			<a ui-sref="scan2" ng-if="mainC.siteProperties.scanditEnable">
 				<img ng-src="images/icon_scan.svg" />
 			</a>
 			<a ui-sref="products">
