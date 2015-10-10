@@ -60,7 +60,7 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 			}
 			var pageChange = (from == '' ? '' : from+'_')+to;
 			
-			console.log('from', from);
+// 			console.log('from', from);
 			if (siteProperties.scanditEnable) {
 				if (from == 'scan2') {
 					Scandit.hide();
@@ -70,47 +70,6 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 			$rootScope.pageChange = pageChange;
 		});
 		
-		
-		/**
-		* codecheck start session aufbau
-		*/
-		/*
-
-		var username = 'laktofri';
-		var secretHex = '1D15FD029289D2C0D5E07569AC5DF7CAAF1FF88DE712F392B1BCA76E9A980A0A';
-		var secretBytes = CryptoJS.enc.Hex.parse(secretHex);
-		var authType = 'DigestQuick';
-		var clientNonceBytes = CryptoJS.lib.WordArray.random(16);
-		var clientNonceBase64 = clientNonceBytes.toString(CryptoJS.enc.Base64);
-		
-		var authData = {
-			authType: authType,
-			username: username,
-			clientNonce: clientNonceBase64,
-			deviceId: "LaktofriApp"
-		};
-
-		console.log('authData', authData);
-		
-		$.ajax("http://www.codecheck.info/WebService/rest/session/auth", {
-			type: 'POST',
-			contentType: "application/json",
-			dataType: "json",
-			data: JSON.stringify(authData),
-			success: function(data, textStatus, jqXHR) {
-				console.log('data', data);
-				console.log('textStatus', textStatus);
-				console.log('jqXHR', jqXHR);
-			},
-			fail: function(error) {
-				console.log('ERROR', error);
-			}
-		});
-*/
-
-		/**
-		* codecheck end
-		*/
 		
 		if (scanditEnable) {
 			Scandit.start();	
@@ -150,8 +109,11 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 
 		scanC.scan = function() {
 			if (scanC.currentItem != null) {
-				scanC.currentItem = null;
-				scanC.status = '';
+				scanC.status = 'close';
+				$timeout(function() {
+			        scanC.status = '';
+			        scanC.currentItem = null;
+		        }, 300);
 			} else {
 				var barcode = barcode_array[Math.floor(Math.random() * barcode_array.length)];
 	// 			console.log(barcode);
@@ -167,7 +129,8 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 					        reviewed: value.reviewed,
 					        review_state: value.review_state,
 					        review_date: value.review_date,
-					        laktose: true
+					        laktose: true,
+					        message: false
 				        };
 		            }
 		        });	
@@ -182,11 +145,19 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 						        reviewed: false,
 						        review_state: '',
 						        review_date: '',
-						        laktose: value.laktose
+						        laktose: value.laktose,
+								message: false
 					        };
 			            }
 			        });
 		        }
+		        
+/*
+		        newItem = {
+					name: 'SORRY!',
+					message: "Zu diesem Produkt wurden nicht genügend Daten gefunden. Versuche es mit einem anderen Produkt."
+				}
+*/
 		        
 		        
 		        if (newItem != null) {
@@ -202,7 +173,7 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 		
 		}
 		
-		scanC.addToLibrary = function(event, item) {
+		scanC.moveProduct = function(event, item) {
 // 			var item = scanC.currentItem;
 			
 			event.element.removeClass('animate');
@@ -312,12 +283,16 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 		var interval = $interval(function() {
 
 			var now = new Date().getTime();
-			// offenes prodult schliessen falls es länger als 3 sekunden angezeigt wird			
-			if (scanC.currentItem != null && lastItem == scanC.currentItem && now-lastScan > 6000 && lastScan != null) {
-				scanC.currentItem = null;
-				scanC.status = '';
+			// offenes prodult schliessen falls es länger als 5 sekunden angezeigt wird			
+			if (scanC.currentItem != null && lastItem == scanC.currentItem && now-lastScan > 4000 && lastScan != null) {
+		
 				scanC.barcode = '';
-				Scandit.vibrate(true);
+				scanC.status = 'close';
+				$timeout(function() {
+			        scanC.status = '';
+			        scanC.currentItem = null;
+		        }, 300);
+		  
 			}
 			lastItem = scanC.currentItem;
 		}, 1000);
@@ -342,25 +317,17 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 			}
 		}
 		
-		
-		
-		var barcode_array = [];
-		angular.forEach(scanC.product_list, function (value, key) {
-			barcode_array.push(value.barcode);
-		});
-		angular.forEach(scanC.product_list_codecheck, function (value, key) {
-			barcode_array.push(value.barcode);
-		});
 
 		scanC.scan = function(barcode) {
 			console.log(barcode);
-			Scandit.vibrate(false);
-			
+	
 			lastScan = new Date().getTime();
 			
 			if (barcode != scanC.barcode) {
-				scanC.barcode = barcode
-
+				scanC.barcode = barcode;
+				
+				navigator.notification.vibrate(200);
+				
 				var newItem = null;
 
 	
@@ -373,7 +340,8 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 					        reviewed: value.reviewed,
 					        review_state: value.review_state,
 					        review_date: value.review_date,
-					        laktose: true
+					        laktose: true,
+					        message: false
 				        };
 		            }
 		        });	
@@ -395,26 +363,30 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 							        reviewed: false,
 							        review_state: '',
 							        review_date: '',
-							        laktose: data.laktose
+							        laktose: data.laktose,
+									message: false
 						        };
 							} else {
 								newItem.name = data.name;
 								newItem.image = data.img_src;
+								newItem.message = false;
 							}
 						} else {
 							console.log('no complete product found on codecheck');
 						}
 						
 						if (newItem == null) {
+							newItem = {
+								name: 'SORRY!',
+								message: "Zu diesem Produkt wurden nicht genügend Daten gefunden. Versuche es mit einem anderen Produkt."
+							}
 					        console.log('kein produkt gefunden!');
-				        } else {
+				        } 
 					        
-// 					        $timeout(function() {
-								lastScan = new Date().getTime();
-						        scanC.status = '';
-						        scanC.currentItem = newItem;
-// 					        }, 1500);
-				        }
+						lastScan = new Date().getTime();
+				        scanC.status = '';
+				        scanC.currentItem = newItem;
+				        
 						
 					},
 					fail: function(error) {
@@ -456,7 +428,6 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 						$timeout(function() {
 							
 							var itemChange = false;
-							var date = new Date();
 							var currentPosition = 0;
 							
 							angular.forEach(scanC.product_list, function (value, key) {
@@ -491,7 +462,6 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 								scanC.product_list[itemChange].stack_position = currentPosition+1;
 							}
 							
-							Scandit.vibrate(true);
 							scanC.barcode = '';
 							scanC.currentItem = null;
 							scanC.status = '';

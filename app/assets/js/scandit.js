@@ -1,16 +1,10 @@
 var Scandit = {
 	disabled: false,
 	posTop: 0,
-	height: 195,
+	height: 260,
 	
 	onSuccess: function() {},
-/*
-	
-	success: function() {
-		alert("Scanned " + resultArray[0] + " code: " + resultArray[1]);
-	},
-	
-*/
+
 	failure: function() {
 		alert("Failed: " + error);
 	},
@@ -33,6 +27,7 @@ var Scandit = {
 						"continuousMode" : true,
 						"torch" : false,
 						"searchBar" : false,
+						"vibrate" : false,
 						"portraitMargins" : "1000/"+this.posTop+"/-1000/"+(667-(this.posTop+this.height))
 					}
 				]
@@ -74,7 +69,7 @@ var Scandit = {
 				{
 					"portraitMargins" : "0/"+this.posTop+"/0/"+(667-(this.posTop+this.height)),
 					"animationDuration": 0,
-					"viewfinderSize" : "0.8/0.4/0.6/0.4",
+					"viewfinderSize" : "0.85/0.7/0.85/0.8",
 					"vibrate": vibrate
 				}
 			]);
@@ -90,7 +85,7 @@ var Scandit = {
 				{
 					"portraitMargins" : "1000/"+this.posTop+"/-1000/"+(667-(this.posTop+this.height)),
 					"animationDuration": 0,
-					"viewfinderSize" : "0.8/0.4/0.6/0.4"
+					"viewfinderSize" : "0.85/0.7/0.85/0.8"
 				}
 			]);
 		}
@@ -104,7 +99,7 @@ var Scandit = {
 				{
 					"portraitMargins" : "0/"+this.posTop+"/0/"+(667-(this.posTop+this.height)),
 					"animationDuration": 0,
-					"viewfinderSize" : "0.8/0.4/0.6/0.4"
+					"viewfinderSize" : "0.85/0.7/0.85/0.8"
 				}
 			]);
 		}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Ebene_1" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="32px" height="32px"
+	 viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+<title>icon_library_round</title>
+<desc>Created with Sketch.</desc>
+<g id="design-5" sketch:type="MSPage">
+	<g id="_x35_-ScanNegativ" transform="translate(-9.000000, -375.000000)" sketch:type="MSArtboardGroup">
+		<g id="icon_library_round" transform="translate(10.000000, 376.000000)" sketch:type="MSLayerGroup">
+			<circle id="Oval-85" sketch:type="MSShapeGroup" fill="none" stroke="#80818D" stroke-width="2" cx="15" cy="15" r="15">
+			</circle>
+			<g id="Group" transform="translate(7.000000, 7.000000)" sketch:type="MSShapeGroup">
+				<path id="Path-466" fill="none" stroke="#80818D" stroke-width="1.5" stroke-linejoin="round" d="M8.139,0.189H4.696
+					L0.381,7.154v6.797h7.758"/>
+				<path id="Path-468" fill="none" stroke="#80818D" stroke-width="1.5" stroke-linejoin="round" d="M0.381,7.157h4.792
+					c0,0,0.031,2.884,3.021,2.884"/>
+				<path id="Path-466_1_" fill="none" stroke="#80818D" stroke-width="1.5" stroke-linejoin="round" d="M7.872,0.189h3.442
+					l4.316,6.965v6.797H7.872"/>
+				<path id="Path-468_1_" fill="none" stroke="#80818D" stroke-width="1.5" stroke-linejoin="round" d="M15.685,7.157h-4.792
+					c0,0-0.031,2.884-3.021,2.884"/>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>
