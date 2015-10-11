@@ -69,11 +69,6 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 
 			$rootScope.pageChange = pageChange;
 		});
-		
-		
-		if (scanditEnable) {
-			Scandit.start();	
-		}
 				
 	})
 	.controller('mainController', function($scope, $state, siteProperties) {

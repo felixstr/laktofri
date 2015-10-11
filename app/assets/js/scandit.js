@@ -2,6 +2,7 @@ var Scandit = {
 	disabled: false,
 	posTop: 0,
 	height: 260,
+	initialized: false,
 	
 	onSuccess: function() {},
 
@@ -9,9 +10,9 @@ var Scandit = {
 		alert("Failed: " + error);
 	},
 	
-	start: function() {
+	init: function() {
 		if (!this.disabled) {
-			console.log('start');
+			console.log('scandit init');
 			
 			cordova.exec(function(resultArray) {
 				Scandit.onSuccess(resultArray);
@@ -34,31 +35,48 @@ var Scandit = {
 			);
 			
 			cordova.exec(null, null, "ScanditSDK", "pause", []);
-		
+			
+			this.initialized = true;
 		}
+	},
+	
+	start: function() {
+		console.log('scandit start', this.initialized);
+		if (!this.initialized) {
+			this.init();
+		}
+		cordova.exec(null, null, "ScanditSDK", "start", []);
 	},
 	
 	stop: function() {
 		console.log('stop');
-		
+		if (!this.initialized) {
+			this.init();
+		}
 		cordova.exec(null, null, "ScanditSDK", "stop", []);
 	},
 	
 	cancel: function() {
 		console.log('cancel');
-		
+		if (!this.initialized) {
+			this.init();
+		}
 		cordova.exec(null, null, "ScanditSDK", "cancel", []);
 	},
 	
 	pause: function() {
 		console.log('pause');
-		
+		if (!this.initialized) {
+			this.init();
+		}
 		cordova.exec(null, null, "ScanditSDK", "pause", []);
 	},
 	
 	resume: function() {
 		console.log('resume');
-		
+		if (!this.initialized) {
+			this.init();
+		}
 		cordova.exec(null, null, "ScanditSDK", "resume", []);
 	},
 	
@@ -77,6 +95,9 @@ var Scandit = {
 	},
 	
 	hide: function() {
+		if (!this.initialized) {
+			this.init();
+		}
 		if (!this.disabled) {
 			console.log('hide');
 			
@@ -92,6 +113,9 @@ var Scandit = {
 	},
 	
 	show: function() {
+		if (!this.initialized) {
+			this.init();
+		}
 		if (!this.disabled) {
 			console.log('show');
 			cordova.exec(null, null, "ScanditSDK", "resume", []);
