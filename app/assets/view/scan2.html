@@ -10,7 +10,7 @@
 			<div class="footer">Bewertet: {{scanC.currentItem.review_date | date:'dd.MM.yyyy'}}</div>		
 		</div>
 	
-		<div class="dropZoneLibrary" ng-show="scanC.currentItem != null && scanC.currentItem.laktose" ng-class="[scanC.status]">
+		<div class="dropZoneLibrary" ng-show="scanC.currentItem != null && scanC.currentItem.laktose" ng-class="[scanC.status]" ng-click="scanC.toLibrary($event, scanC.currentItem)">
 			<img src="images/icon_library_round.svg" />
 		</div>
 	</div>

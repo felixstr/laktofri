@@ -20,9 +20,9 @@
 						
 			</div>
 			
-			<img class="icon_smiley_good" ng-class="[reviewC.status]" src="images/icon_smiley_green.svg" />
-			<img class="icon_smiley_ok" ng-class="[reviewC.status]" src="images/icon_smiley_orange.svg" />
-			<img class="icon_smiley_bad" ng-class="[reviewC.status]" src="images/icon_smiley_red.svg" />
+			<img class="icon_smiley_good" ng-class="[reviewC.status]" src="images/icon_smiley_green.svg" ng-click="reviewC.rate(reviewC.firstItem, 'good')" />
+			<img class="icon_smiley_ok" ng-class="[reviewC.status]" src="images/icon_smiley_orange.svg" ng-click="reviewC.rate(reviewC.firstItem, 'ok')" />
+			<img class="icon_smiley_bad" ng-class="[reviewC.status]" src="images/icon_smiley_red.svg"  ng-click="reviewC.rate(reviewC.firstItem, 'bad')" />
 		</div>
 	</div>
 </section>

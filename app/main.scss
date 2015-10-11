@@ -949,7 +949,7 @@ section.view.viewProducts {
 
 			
 			&.ng-enter-stagger {
-				animation-delay: 0.2s;
+// 				animation-delay: 0.2s;
 			}
 			&.ng-enter {
 				transform: scale3d(0.8, 0.8, 0.8); opacity: 0;
@@ -1220,24 +1220,17 @@ section.view.viewReview {
 		height: 35px;
 		border-top: 1px solid #DADADA;
 		line-height: 35px;
-		padding-left: 10px;
+		padding-left: 30px;
 
 		font-family: Roboto-Light;
 		font-size: 12px;
 		color: #343434;
 		
 		background-repeat: no-repeat;
-		background-position: right 10px center;
+		background-position: left 10px center;
 		background-size: 15px;
 		
 		
-		img {
-			position: absolute;
-			right: 10px;
-			top: 10px;
-			width: 15px;
-			height: 15px;
-		}	
 	}
 	
 	&.review_good .footer { background-image: url(images/icon_smiley_green.svg);	}

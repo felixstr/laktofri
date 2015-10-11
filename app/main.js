@@ -171,7 +171,7 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 		scanC.moveProduct = function(event, item) {
 // 			var item = scanC.currentItem;
 			
-			event.element.removeClass('animate');
+			$('.product').removeClass('animate');
 			
 			if (item.laktose) {
 				
@@ -185,65 +185,13 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 				
 				if (event.isFinal) {
 					
-					event.element.addClass('animate');
+					
 					
 					if (event.deltaX < -60) {
 						
 						
+						scanC.toLibrary(Event, item);
 						
-						scanC.status = 'toLibrary';
-						
-					
-				
-						$timeout(function() {
-							
-							var itemChange = false;
-							var date = new Date();
-							var currentPosition = 0;
-							
-							angular.forEach(scanC.product_list, function (value, key) {
-								if (value.stack_position > currentPosition) {
-									currentPosition = value.stack_position;
-								}
-								if (item.barcode == value.barcode) {
-									itemChange = key;
-									
-									
-									value.reviewed = false;
-									value.review_date = '';
-									value.review_state = '';
-									value.review_state_filter = '';
-								}
-							});
-							
-							
-							
-							if (!itemChange) {
-								scanC.product_list.push({
-									barcode: item.barcode,
-									name: item.name,
-									image: item.image,
-									reviewed: false,
-									review_date: '',
-									review_state: '',
-									review_state_filter: '',
-									stack_position: currentPosition+1
-								})
-							} else {
-								scanC.product_list[itemChange].stack_position = currentPosition+1;
-							}
-							
-							
-							scanC.currentItem = null;
-							scanC.status = '';
-							siteProperties.reviewCount = Review.count();
-							
-							
-							event.element.css({
-								'transform': 'translateX(0px)'
-							});
-						
-						}, 600);
 		
 					} else {
 						event.element.css({
@@ -254,6 +202,61 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 				}
 			}
 			
+		}
+		
+		scanC.toLibrary = function(event, item) {
+			scanC.status = 'toLibrary';
+			$('.product').addClass('animate');			
+				
+			$timeout(function() {
+				
+				var itemChange = false;
+				var date = new Date();
+				var currentPosition = 0;
+				
+				angular.forEach(scanC.product_list, function (value, key) {
+					if (value.stack_position > currentPosition) {
+						currentPosition = value.stack_position;
+					}
+					if (item.barcode == value.barcode) {
+						itemChange = key;
+						
+						
+						value.reviewed = false;
+						value.review_date = '';
+						value.review_state = '';
+						value.review_state_filter = '';
+					}
+				});
+				
+				
+				
+				if (!itemChange) {
+					scanC.product_list.push({
+						barcode: item.barcode,
+						name: item.name,
+						image: item.image,
+						reviewed: false,
+						review_date: '',
+						review_state: '',
+						review_state_filter: '',
+						stack_position: currentPosition+1
+					})
+				} else {
+					scanC.product_list[itemChange].stack_position = currentPosition+1;
+				}
+				
+				
+				scanC.currentItem = null;
+				scanC.status = '';
+				siteProperties.reviewCount = Review.count();
+				
+				
+				$('.product').css({
+					'transform': 'translateX(0px)'
+				});
+			
+			}, 600);
 		}
 		
 	})
@@ -394,80 +397,20 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 		}
 		
 		scanC.moveProduct = function(event, item) {
-// 			var item = scanC.currentItem;
 			
-			event.element.removeClass('animate');
+			$('.product').removeClass('animate');
 			
 			if (item.laktose) {
-				
-				
 				
 				event.element.css({
 					'transform': 'translateX('+event.deltaX+'px)'
 				});
 				
-		
-				
 				if (event.isFinal) {
-					
-					event.element.addClass('animate');
 					
 					if (event.deltaX < -60) {
 						
-						
-						
-						scanC.status = 'toLibrary';
-						
-					
-				
-						$timeout(function() {
-							
-							var itemChange = false;
-							var currentPosition = 0;
-							
-							angular.forEach(scanC.product_list, function (value, key) {
-								if (value.stack_position > currentPosition) {
-									currentPosition = value.stack_position;
-								}
-								if (item.barcode == value.barcode) {
-									itemChange = key;
-									
-									
-									value.reviewed = false;
-									value.review_date = '';
-									value.review_state = '';
-									value.review_state_filter = '';
-								}
-							});
-							
-							
-							
-							if (!itemChange) {
-								scanC.product_list.push({
-									barcode: item.barcode,
-									name: item.name,
-									image: item.image,
-									reviewed: false,
-									review_date: '',
-									review_state: '',
-									review_state_filter: '',
-									stack_position: currentPosition+1
-								})
-							} else {
-								scanC.product_list[itemChange].stack_position = currentPosition+1;
-							}
-							
-							scanC.barcode = '';
-							scanC.currentItem = null;
-							scanC.status = '';
-							siteProperties.reviewCount = Review.count();
-							
-							
-							event.element.css({
-								'transform': 'translateX(0px)'
-							});
-						
-						}, 600);
+						scanC.toLibrary(Event, item);
 		
 					} else {
 						event.element.css({
@@ -478,6 +421,61 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 				}
 			}
 			
+		}
+		
+		scanC.toLibrary = function(event, item) {
+			scanC.status = 'toLibrary';
+			$('.product').addClass('animate');			
+				
+			$timeout(function() {
+				
+				var itemChange = false;
+				var date = new Date();
+				var currentPosition = 0;
+				
+				angular.forEach(scanC.product_list, function (value, key) {
+					if (value.stack_position > currentPosition) {
+						currentPosition = value.stack_position;
+					}
+					if (item.barcode == value.barcode) {
+						itemChange = key;
+						
+						
+						value.reviewed = false;
+						value.review_date = '';
+						value.review_state = '';
+						value.review_state_filter = '';
+					}
+				});
+				
+				
+				
+				if (!itemChange) {
+					scanC.product_list.push({
+						barcode: item.barcode,
+						name: item.name,
+						image: item.image,
+						reviewed: false,
+						review_date: '',
+						review_state: '',
+						review_state_filter: '',
+						stack_position: currentPosition+1
+					})
+				} else {
+					scanC.product_list[itemChange].stack_position = currentPosition+1;
+				}
+				
+				scanC.barcode = '';
+				scanC.currentItem = null;
+				scanC.status = '';
+				siteProperties.reviewCount = Review.count();
+				
+				
+				$('.product').css({
+					'transform': 'translateX(0px)'
+				});
+			
+			}, 600);
 		}
 		
 	})
@@ -592,7 +590,12 @@ productC.openEdit = function(item) {
 		reviewC.product_list = product_list;
 		reviewC.status = '';
 		reviewC.stackLimit = 5;
+		
+		Review.order();
 		reviewC.countReview = Review.count();
+		reviewC.firstItem = Review.firstItem();
+		
+		console.log(reviewC.firstItem);
 		
 		reviewC.stackProperties = {
 			firstY: 28,
@@ -606,7 +609,7 @@ productC.openEdit = function(item) {
 		siteProperties.viewName = 'products';
 		siteProperties.reviewCount = reviewC.countReview;
 		
-		Review.order();
+		
 
 		reviewC.moveProduct = function(event, item) {
 			$('.stack').removeClass('animate');
@@ -656,7 +659,7 @@ productC.openEdit = function(item) {
 					}
 					
 					
-					reviewC.status = 'move_'+status;
+					
 					
 					for (var i = 1; i < reviewC.stackProperties.count; i++) {
 						$('.product.position_'+i).css({
@@ -664,45 +667,7 @@ productC.openEdit = function(item) {
 						});
 					}
 					
-					$timeout(function() {
-				        
-				        if (status == 'back') {
-					        var changeItem = null;
-				
-							angular.forEach(reviewC.product_list, function (value, key) {
-								if (item == value) {
-									changeItem = value;
-								}
-							});
-				
-				
-							var newPosition = Review.order(changeItem);
-	
-							changeItem.stack_position = newPosition;
-							
-				        } else {
-					        angular.forEach(reviewC.product_list, function (value, key) {
-						        if (item == value) {
-							        var now = new Date();
-							        
-					            	value.reviewed = true;
-					            	value.review_date = now.yyyymmdd();
-					            	value.review_state = status;
-					            	value.review_state_filter = false;
-					            	value.stack_position = 10000;
-					            }
-					        });
-					   
-					        reviewC.countReview = Review.count();
-					        siteProperties.reviewCount = reviewC.countReview;
-					        
-					        Review.order();
-				        
-				        }
-				        
-				        reviewC.status = '';
-				        
-			        }, 700);
+					reviewC.rate(item, status);
 
 
 				} else {
@@ -716,6 +681,54 @@ productC.openEdit = function(item) {
 				}
 			}
 			
+		}
+		
+		reviewC.rate = function(item, status) {
+			console.log('item', item);
+			
+			$('.stack').addClass('animate');
+			reviewC.status = 'move_'+status;
+					
+			$timeout(function() {
+		        
+		        if (status == 'back') {
+			        var changeItem = null;
+		
+					angular.forEach(reviewC.product_list, function (value, key) {
+						if (item == value) {
+							changeItem = value;
+						}
+					});
+		
+		
+					var newPosition = Review.order(changeItem);
+
+					changeItem.stack_position = newPosition;
+					
+		        } else {
+			        angular.forEach(reviewC.product_list, function (value, key) {
+				        if (item == value) {
+					        var now = new Date();
+					        
+			            	value.reviewed = true;
+			            	value.review_date = now.yyyymmdd();
+			            	value.review_state = status;
+			            	value.review_state_filter = false;
+			            	value.stack_position = 10000;
+			            }
+			        });
+			   
+			        reviewC.countReview = Review.count();
+			        siteProperties.reviewCount = reviewC.countReview;
+			        
+			        Review.order();
+		        
+		        }
+		        
+		        reviewC.firstItem = Review.firstItem();
+		        reviewC.status = '';
+		        
+	        }, 700);
 		}
 	
 
@@ -944,6 +957,15 @@ productC.openEdit = function(item) {
 				});
 				
 				return newPositions;
+            },
+            firstItem: function() {
+	            var item = null;
+	            angular.forEach(product_list, function (value, key) {
+		            if (value.stack_position == 0) {
+			            item = value;
+		            }
+	            });
+	            return item;
             }
         };
     });
