@@ -488,19 +488,29 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 		
 		productC.product_list = product_list;
 		productC.currentState = 'all';
+		productC.currentStateFilter = 'all';
 		productC.itemEdit = null;
 		productC.viewCount = siteProperties.reviewCount;
 				
 		productC.changeFilter = function(state) {
-			angular.forEach(productC.product_list, function (value, key) {
-				value.review_state_filter = value.review_state;
-	        });
+			$('.product_list').addClass('hide');
 			
-			if(state == 'all') {
-				productC.currentState = 'all';
-			} else {
-				productC.currentState = state;
-			}
+			productC.currentStateFilter = state;
+
+			
+			$timeout(function() {
+				angular.forEach(productC.product_list, function (value, key) {
+					value.review_state_filter = value.review_state;
+		        });
+				
+				productC.currentState = productC.currentStateFilter;
+				
+				
+				$('.product_list').removeClass('hide');
+			}, 300);
+			
+			
+			
 		}
 		
 		productC.moveProduct = function(event, item) {
@@ -544,12 +554,7 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 			
 		}
 		
-		/*
-productC.openEdit = function(item) {
-			productC.itemEdit = item;
-		}
-		
-*/
+
 		productC.changeReview = function(item, state) {
 
 			var reviewItem = null;
@@ -563,6 +568,8 @@ productC.openEdit = function(item) {
 	        if (reviewItem) {
 		        reviewItem.review_changed = true;
 	            reviewItem.review_state = state;
+	            var now = new Date();
+			    reviewItem.review_date = now.yyyymmdd();
 	            
 	            $timeout(function() {
 			        productC.itemEdit = null;
@@ -742,9 +749,9 @@ productC.openEdit = function(item) {
 		siteProperties.viewName = 'help';
 		helpC.siteProperties = siteProperties;
 		
-		helpC.changeMode = function() {
-			console.log('changeMode', siteProperties.scanditEnable);
-			if (siteProperties.scanditEnable) {
+		helpC.changeMode = function(type) {
+// 			console.log('changeMode', siteProperties.scanditEnable);
+			if (type == 'demo') {
 				siteProperties.scanditEnable = false;
 				Scandit.stop();
 			} else {
@@ -895,7 +902,7 @@ productC.openEdit = function(item) {
 		},
 		{
 			barcode: '8003938005224',
-			name: 'test - Bonta Divina Delizia Vanille (1,54 EUR/100 g)',
+			name: 'Bonta Divina Delizia Vanille (1,54 EUR/100 g)',
 	        image: 'http://www.codecheck.info/img/28370/1',
 	        laktose: true
 		},

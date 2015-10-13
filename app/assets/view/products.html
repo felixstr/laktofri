@@ -1,6 +1,5 @@
 <section class="view viewProducts" ng-controller="productController as productC">
-	<div class="bg_wrap">
-		<nav class="filter filter_{{productC.currentState}}">
+	<nav class="filter filter_{{productC.currentStateFilter}}">
 			<button class="all" ng-class="productC.currentState == 'all' ? 'active' : ''" ng-click="productC.changeFilter('all')">
 				<div></div>
 				<div></div>
@@ -8,17 +7,17 @@
 				<img ng-src="{{productC.currentState == 'all' ? 'images/icon_smiley_all_active.svg' : 'images/icon_smiley_all.svg'}}" />
 				
 			</button>	
-			<button class="good" ng-class="productC.currentState == 'good' ? 'active' : ''" ng-click="productC.changeFilter('good')">
+			<button class="good" ng-class="productC.currentStateFilter == 'good' ? 'active' : ''" ng-click="productC.changeFilter('good')">
 				<div></div>
 				<img ng-src="{{productC.currentState == 'good' ? 'images/icon_smiley_green_active.svg' : 'images/icon_smiley_green.svg'}}" />
 				
 			</button>	
-			<button class="ok" ng-class="productC.currentState == 'ok' ? 'active' : ''" ng-click="productC.changeFilter('ok')">
+			<button class="ok" ng-class="productC.currentStateFilter == 'ok' ? 'active' : ''" ng-click="productC.changeFilter('ok')">
 				<div></div>
 				<img ng-src="{{productC.currentState == 'ok' ? 'images/icon_smiley_orange_active.svg' : 'images/icon_smiley_orange.svg'}}" />
 				
 			</button>	
-			<button class="bad" ng-class="productC.currentState == 'bad' ? 'active' : ''" ng-click="productC.changeFilter('bad')">
+			<button class="bad" ng-class="productC.currentStateFilter == 'bad' ? 'active' : ''" ng-click="productC.changeFilter('bad')">
 				<div></div>
 				<img ng-src="{{productC.currentState == 'bad' ? 'images/icon_smiley_red_active.svg' : 'images/icon_smiley_red.svg'}}" />
 				
@@ -26,8 +25,11 @@
 			
 			<div class="border"></div>
 		</nav>
+	
+	<div class="bg_wrap">
+		
 			
-		<a ng-show="productC.currentState == 'all' && productC.viewCount > 0" class="link_review" href="#/review"><span class="count">{{productC.viewCount}}</span>Unbewertete Produkte</a>
+		<a ng-show="true || productC.currentState == 'all' && productC.viewCount > 0" class="link_review" href="#/review"><span class="count">{{productC.viewCount}}</span>Unbewertete Produkte</a>
 		
 		<div class="product_list">
 			<div class="product_wrapper" ng-class="productC.itemEdit === item ? 'open' : ''" ng-repeat="item in productC.product_list | filter:{reviewed:true} | productFilter:productC.currentState | orderBy:'review_date':true">

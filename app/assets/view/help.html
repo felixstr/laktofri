@@ -1,7 +1,48 @@
-<section class="view viewReview" ng-controller="helpController as helpC">
+<section class="view viewHelp" ng-controller="helpController as helpC">
+	<header>
+		LaktoRate
+	</header>
 	<div class="bg_wrap">
-		Leidest du an Laktose-Intoleranz oder Unverträglichkeit?
-		Mit Laktofri kannst du beim Einkaufen ganz einfach via Barcode Scanner erkennen ob es in einem Produkt Laktose hat. Wenn du ein Laktose-haltiges Produkt dennoch ausprobieren möchtest, bietet dir diese App die Möglichkeit das Produkt nach dem essen auf deine individuelle Verträglichkeit zu bewerten. Beim nächsten Einkauf, wird diese Bewertung beim scannen zusätzlich angezeigt. So kannst du dir deine eigene Laktose-Produkt-Ablage erstellen!
-		<button ng-click="helpC.changeMode()">mode</button><br>current-mode: {{ helpC.siteProperties.scanditEnable ? 'scandit Enabled' : 'scandit Disabled'}} {{ helpC.siteProperties.title }}
+		<div class="box">
+			<div class="title">Was ist LaktoRate?</div>
+			<div class="content">
+				<h1>Leidest du an Laktose-Unverträglichkeit?</h1>
+				<p>Mit <i>LaktoRate</i> kannst du beim Einkaufen ganz einfach mit dem Barcode-Scanner erkennen ob ein Produkt Laktose beinhaltet oder nicht. Wenn du ein laktosehaltiges Produkt trotz deiner Unverträglichkeit ausprobieren möchtest, kannst du es in deine Ablage verschieben.</p><p>Später, nach dem Essen, bietet dir <i>LaktoRate</i> die Möglichkeit das Produkt auf deine individuelle Verträglichkeit zu bewerten. Beim nächsten Einkauf, wird dir deine Bewertung beim scannen zusätzlich angezeigt.</p><p>So kannst du dir deine eigene, persönliche Laktose-Produkt-Ablage erstellen.</p>
+			</div>
+		</div>
+		<!--
+		<div class="box">
+			<div class="title">Wie benutzte ich LaktoRate?</div>
+			<div class="content">
+				<h1>slides</h1>
+				
+			</div>
+		</div>
+		-->
+		<div class="box">
+			<div class="title">Scanner Modus</div>
+			<div class="content">
+				<button ng-click="helpC.changeMode('demo')" ng-class="helpC.siteProperties.scanditEnable ? '' : 'active'">Demo</button>
+				<button ng-click="helpC.changeMode('live')" ng-class="helpC.siteProperties.scanditEnable ? 'active' : ''">Scandit & Codecheck</button>
+			</div>
+		</div>
+		
+		<div class="box">
+			<div class="title">Weitere Informationen</div>
+			<div class="content">
+				
+				<p>Konzept, Design und Umsetzung: Felix Stricker<p>
+				<p>Mobile User Interface, VIAD, ZHdK, HS 2015</p>
+				<p>Dozenten: Jürgen Späth, Stefano Vannotti, Joël Gähwiler</p>
+				
+				<h1>Technische Umsetzung</h1>
+				<p>Angular JS und Phonegap</p>
+				<p>Produkt-Daten von <a href="codecheck.info" target="_blank">codecheck.info</a> - Herzlichen Dank!</p>
+				<p>Barcode-Scanner von <a href="scandit.com" target="_blank">scandit.com</a></p>
+				
+			</div>
+		</div>
+		
+		
 	</div>
 </section>
