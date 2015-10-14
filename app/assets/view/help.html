@@ -10,6 +10,7 @@
 				<p>Mit <i>LaktoRate</i> kannst du beim Einkaufen ganz einfach mit dem Barcode-Scanner erkennen ob ein Produkt Laktose beinhaltet oder nicht. Wenn du ein laktosehaltiges Produkt trotz deiner Unverträglichkeit ausprobieren möchtest, kannst du es in deine Ablage verschieben.</p><p>Später, nach dem Essen, bietet dir <i>LaktoRate</i> die Möglichkeit das Produkt auf deine individuelle Verträglichkeit zu bewerten. Beim nächsten Einkauf, wird dir deine Bewertung beim scannen zusätzlich angezeigt.</p><p>So kannst du dir deine eigene, persönliche Laktose-Produkt-Ablage erstellen.</p>
 			</div>
 		</div>
+		
 		<!--
 		<div class="box">
 			<div class="title">Wie benutzte ich LaktoRate?</div>
@@ -18,14 +19,9 @@
 				
 			</div>
 		</div>
+		
+		
 		-->
-		<div class="box">
-			<div class="title">Scanner Modus</div>
-			<div class="content">
-				<button ng-click="helpC.changeMode('demo')" ng-class="helpC.siteProperties.scanditEnable ? '' : 'active'">Demo</button>
-				<button ng-click="helpC.changeMode('live')" ng-class="helpC.siteProperties.scanditEnable ? 'active' : ''">Scandit & Codecheck</button>
-			</div>
-		</div>
 		
 		<div class="box">
 			<div class="title">Weitere Informationen</div>
@@ -36,13 +32,20 @@
 				<p>Dozenten: Jürgen Späth, Stefano Vannotti, Joël Gähwiler</p>
 				
 				<h1>Technische Umsetzung</h1>
-				<p>Angular JS und Phonegap</p>
+				<p>AngularJS und Phonegap</p>
 				<p>Produkt-Daten von <a href="codecheck.info" target="_blank">codecheck.info</a> - Herzlichen Dank!</p>
 				<p>Barcode-Scanner von <a href="scandit.com" target="_blank">scandit.com</a></p>
 				
 			</div>
 		</div>
 		
+		<div class="box">
+			<div class="title">Scanner Modus</div>
+			<div class="content">
+				<button ng-click="helpC.changeMode('demo')" ng-class="helpC.siteProperties.scanditEnable ? '' : 'active'">Demo</button>
+				<button ng-click="helpC.changeMode('live')" ng-class="helpC.siteProperties.scanditEnable ? 'active' : ''">Scandit & Codecheck</button>
+			</div>
+		</div>
 		
 	</div>
 </section>

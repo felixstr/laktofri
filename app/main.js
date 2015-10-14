@@ -1,4 +1,4 @@
-var scanditEnable = false;
+var scanditEnable = true;
 
 
 Date.prototype.yyyymmdd = function() {
@@ -259,6 +259,14 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 			}, 600);
 		}
 		
+		scanC.closeProduct = function() {
+			scanC.status = 'close';
+			$timeout(function() {
+		        scanC.status = '';
+		        scanC.currentItem = null;
+	        }, 300);
+		}
+		
 	})
 	.controller('scan2Controller', function($scope, $rootScope, $animate, $timeout, $interval, siteProperties, product_list, product_list_codecheck, Review) {
 		var scanC = this; // $scope
@@ -281,15 +289,10 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 		var interval = $interval(function() {
 
 			var now = new Date().getTime();
-			// offenes prodult schliessen falls es länger als 5 sekunden angezeigt wird			
-			if (scanC.currentItem != null && lastItem == scanC.currentItem && now-lastScan > 4000 && lastScan != null) {
+			// offenes prodult schliessen falls es länger als 15 sekunden angezeigt wird			
+			if (scanC.currentItem != null && lastItem == scanC.currentItem && now-lastScan > 15000 && lastScan != null) {
 		
-				scanC.barcode = '';
-				scanC.status = 'close';
-				$timeout(function() {
-			        scanC.status = '';
-			        scanC.currentItem = null;
-		        }, 300);
+				scanC.closeProduct();
 		  
 			}
 			lastItem = scanC.currentItem;
@@ -476,6 +479,15 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 				});
 			
 			}, 600);
+		}
+		
+		scanC.closeProduct = function() {
+			scanC.barcode = '';
+			scanC.status = 'close';
+			$timeout(function() {
+		        scanC.status = '';
+		        scanC.currentItem = null;
+	        }, 300);
 		}
 		
 	})

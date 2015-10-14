@@ -472,6 +472,25 @@ section.view.viewScan {
 		opacity: 1;
 		transform: scale(1);
 		z-index: 2;
+		
+		.delete {
+			position: absolute;
+			top: -10px;
+			right: -10px;
+			color: $color-blue-dark;
+			background: white;
+			width: 26px;
+			height: 26px;
+			font-size: 14px;
+			line-height: 25px;
+			border-radius: 50%;
+			text-align: center;
+			
+			background-image: url(images/icon_close.svg);
+			background-repeat: no-repeat;
+			background-position: center center;
+			
+		}
 				
 		.title {
 			color: white;
@@ -534,7 +553,9 @@ section.view.viewScan {
 			.footer {
 				opacity: 0;
 			}
-			
+			.delete {
+				opacity: 0;
+			}
 			
 		}
 		
@@ -1244,7 +1265,7 @@ section.view.viewHelp {
 			h1 {
 				font-family: Roboto-Medium;
 				font-weight: normal;
-				font-size: 18px;
+				font-size: 16px;
 				margin-bottom: 5px;
 				margin-top: 20px;
 				
@@ -1262,20 +1283,24 @@ section.view.viewHelp {
 			
 			button {
 				width: 50%;
-				height: 45px;
+				height: 36px;
 				float: left;
-				border: 1px solid $color-blue-shadow;
-				background: $color-grey-light;
-				color: $color-blue-shadow;
-				border-top-left-radius: 2px;
-				border-bottom-left-radius: 2px;
-				font-size: 15px;
+				border: 2px solid $color-blue-shadow;
+				background: #525475;
+				color: white;
+				border-top-left-radius: 18px;
+				border-bottom-left-radius: 18px;
+				font-size: 14px;
 				margin-bottom: 10px;
 				
+				&:first-child {
+					border-right: 0;
+				}
 				&:nth-child(2) {
 					border-radius: 0;
-					border-top-right-radius: 2px;
-					border-bottom-right-radius: 2px;
+					border-top-right-radius: 18px;
+					border-bottom-right-radius: 18px;
+					border-left: 0;
 				}
 				
 				&.active {
@@ -1297,7 +1322,7 @@ section.view.viewHelp {
 	
 	box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.13);
 	border-radius: 2px;
-	overflow: hidden;
+// 	overflow: hidden;
 	
 	.title {
 		width: 100%;
@@ -1313,6 +1338,9 @@ section.view.viewHelp {
 		text-overflow: ellipsis;
 		background: $color-grey-light;
 		color: $color-blue;
+		
+		border-top-left-radius: 2px;
+		border-top-right-radius: 2px;
 	}
 	
 	img.picture {

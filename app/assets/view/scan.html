@@ -7,6 +7,7 @@
 	</div>
 	
 	<div id="product" ng-show="scanC.status == 'load' || scanC.status == 'close' || scanC.currentItem != null" ng-class="[scanC.status, {'load': scanC.load}, {'reviewed': scanC.currentItem.reviewed}, {'nok': scanC.currentItem.laktose}, {'ok': !scanC.currentItem.laktose}, {'message': scanC.currentItem.message != false}]" class="product {{scanC.currentItem != null && scanC.currentItem.review_state != '' ? 'review_'+scanC.currentItem.review_state : ''}}" hm-panend="scanC.moveProduct($event, scanC.currentItem)" hm-panmove="scanC.moveProduct($event, scanC.currentItem)">
+		<div class="delete" ng-click="scanC.closeProduct()"></div>
 		<div class="title">{{scanC.currentItem.name}}</div>
 		<img class="picture" ng-show="scanC.currentItem != null && scanC.currentItem.message === false" ng-src="{{scanC.currentItem.image}}" />
 		<div class="text">{{ scanC.currentItem.message }}</div>
