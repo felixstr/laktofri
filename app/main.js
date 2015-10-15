@@ -1,4 +1,4 @@
-var scanditEnable = true;
+var scanditEnable = false;
 
 
 Date.prototype.yyyymmdd = function() {
@@ -171,31 +171,34 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 		scanC.moveProduct = function(event, item) {
 // 			var item = scanC.currentItem;
 			
-			$('.product').removeClass('animate');
+			$('#product_wrap').removeClass('animate');
+			
 			
 			if (item.laktose) {
 				
+				$('#product_wrap').addClass('drag');
 				
 				
 				event.element.css({
-					'transform': 'translateX('+event.deltaX+'px)'
+					'transform': 'translateY('+event.deltaY+'px)'
 				});
 				
 		
 				
 				if (event.isFinal) {
 					
+					$('#product_wrap').removeClass('drag');
 					
-					
-					if (event.deltaX < -60) {
+					if (event.deltaY > 60) {
 						
 						
 						scanC.toLibrary(Event, item);
 						
 		
 					} else {
+						$('#product_wrap').addClass('animate');
 						event.element.css({
-							'transform': 'translateX(0px)'
+							'transform': 'translateY(0px)'
 						});
 					}
 				
@@ -206,7 +209,7 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 		
 		scanC.toLibrary = function(event, item) {
 			scanC.status = 'toLibrary';
-			$('.product').addClass('animate');			
+			$('#product_wrap').addClass('animate');			
 				
 			$timeout(function() {
 				
@@ -251,9 +254,10 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 				scanC.status = '';
 				siteProperties.reviewCount = Review.count();
 				
+				$('#product_wrap').removeClass('animate');	
 				
-				$('.product').css({
-					'transform': 'translateX(0px)'
+				$('#product_wrap').css({
+					'transform': 'translateY(0px)'
 				});
 			
 			}, 600);
@@ -289,8 +293,8 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 		var interval = $interval(function() {
 
 			var now = new Date().getTime();
-			// offenes prodult schliessen falls es länger als 15 sekunden angezeigt wird			
-			if (scanC.currentItem != null && lastItem == scanC.currentItem && now-lastScan > 15000 && lastScan != null) {
+			// offenes prodult schliessen falls es länger als 200 sekunden angezeigt wird			
+			if (scanC.currentItem != null && lastItem == scanC.currentItem && now-lastScan > 200000 && lastScan != null) {
 		
 				scanC.closeProduct();
 		  
@@ -401,23 +405,29 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 		
 		scanC.moveProduct = function(event, item) {
 			
-			$('.product').removeClass('animate');
+			$('#product_wrap').removeClass('animate');
 			
 			if (item.laktose) {
 				
-				event.element.css({
-					'transform': 'translateX('+event.deltaX+'px)'
-				});
+				$('#product_wrap').addClass('drag');
+				
+				if (event.deltaY > 0) {
+					event.element.css({
+						'transform': 'translateY('+event.deltaY+'px)'
+					});
+				}
 				
 				if (event.isFinal) {
+					$('#product_wrap').removeClass('drag');
 					
-					if (event.deltaX < -60) {
+					if (event.deltaY > 70) {
 						
 						scanC.toLibrary(Event, item);
 		
 					} else {
+						$('#product_wrap').addClass('animate');
 						event.element.css({
-							'transform': 'translateX(0px)'
+							'transform': 'translateY(0px)'
 						});
 					}
 				
@@ -428,7 +438,7 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 		
 		scanC.toLibrary = function(event, item) {
 			scanC.status = 'toLibrary';
-			$('.product').addClass('animate');			
+			$('#product_wrap').addClass('animate');			
 				
 			$timeout(function() {
 				
@@ -474,8 +484,8 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 				siteProperties.reviewCount = Review.count();
 				
 				
-				$('.product').css({
-					'transform': 'translateX(0px)'
+				$('#product_wrap').css({
+					'transform': 'translateY(0px)'
 				});
 			
 			}, 600);
@@ -581,7 +591,7 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 		        reviewItem.review_changed = true;
 	            reviewItem.review_state = state;
 	            var now = new Date();
-			    reviewItem.review_date = now.yyyymmdd();
+// 			    reviewItem.review_date = now.yyyymmdd();
 	            
 	            $timeout(function() {
 			        productC.itemEdit = null;
@@ -625,7 +635,7 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 		
 		
 		siteProperties.title = 'Produkte bewerten';
-		siteProperties.viewName = 'products';
+		siteProperties.viewName = 'review';
 		siteProperties.reviewCount = reviewC.countReview;
 		
 		

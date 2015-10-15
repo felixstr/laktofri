@@ -28,17 +28,23 @@
 		
 		<footer class="view_{{mainC.siteProperties.viewName}}">
 			
-			<a ui-sref="scan" ng-if="!mainC.siteProperties.scanditEnable">
-				<img ng-src="images/icon_scan.svg" />
+			<a class="scan1" ui-sref="scan" ng-if="!mainC.siteProperties.scanditEnable">
+				Scanner
 			</a>
-			<a ui-sref="scan2" ng-if="mainC.siteProperties.scanditEnable">
-				<img ng-src="images/icon_scan.svg" />
+			<a class="scan2" ui-sref="scan2" ng-if="mainC.siteProperties.scanditEnable">
+				Scanner
 			</a>
-			<a ui-sref="products">
-				<img ng-src="images/icon_library.svg" />
+			<a class="bewerten" ui-sref="review">
+				Bewerten
 				<span ng-if="mainC.siteProperties.reviewCount > 0" class="count value-{{mainC.siteProperties.reviewCount}}">{{mainC.siteProperties.reviewCount}}</span>
 			</a>
-			<a ui-sref="help"><span>?</span></a>
+			<a class="ablage" ui-sref="products">
+				Ablage
+			</a>
+			<a class="help" ui-sref="help">
+				Info
+				<span>?</span>
+			</a>
 			
 			<div class="border"></div>
 		</footer>

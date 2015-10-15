@@ -2,18 +2,30 @@
 	<div class="scandit_back">
 	</div>
 	<div class="product_back">
-	
-		<div id="product" ng-show="scanC.status == 'load' || scanC.status == 'close' || scanC.currentItem != null" ng-class="[scanC.status, {'load': scanC.load}, {'reviewed': scanC.currentItem.reviewed}, {'nok': scanC.currentItem.laktose}, {'ok': !scanC.currentItem.laktose}, {'message': scanC.currentItem.message != false}]" class="product {{scanC.currentItem != null && scanC.currentItem.review_state != '' ? 'review_'+scanC.currentItem.review_state : ''}}" hm-panend="scanC.moveProduct($event, scanC.currentItem)" hm-panmove="scanC.moveProduct($event, scanC.currentItem)">
+		
+		<div class="textBlock" ng-show="scanC.currentItem == null && scanC.status != 'load'">
+			<h1>LactoRate</h1>
+			<h2>Für Personen mit Laktose-Unverträglichkeit</h2>
+			
+			<h3>Scannen <span></span> Essen <span></span> Bewerten</h3>
+		</div>
+		
+		<div id="product_wrap" ng-show="scanC.status == 'load' || scanC.status == 'close' || scanC.currentItem != null" ng-class="[scanC.status, {'load': scanC.load}, {'message': scanC.currentItem.message != false}, {'reviewed': scanC.currentItem.reviewed}, {'nok': scanC.currentItem.laktose}, {'ok': !scanC.currentItem.laktose}]" hm-panend="scanC.moveProduct($event, scanC.currentItem)" hm-panmove="scanC.moveProduct($event, scanC.currentItem)">
 			<div class="delete" ng-click="scanC.closeProduct()"></div>
-			<div class="title">{{scanC.currentItem.name}}</div>
-			<img class="picture" ng-show="scanC.currentItem != null && scanC.currentItem.message === false" ng-src="{{scanC.currentItem.image}}" />
-			<div class="text">{{ scanC.currentItem.message }}</div>
-			<div class="footer">Bewertet: {{scanC.currentItem.review_date | date:'dd.MM.yyyy'}}</div>		
+			<div id="product" class="product {{scanC.currentItem != null && scanC.currentItem.review_state != '' ? 'review_'+scanC.currentItem.review_state : ''}}">
+				<div class="laktose">{{scanC.currentItem.laktose ? 'Enthält Laktose!' : 'Keine Laktose!'}}</div>
+				<div class="title">{{scanC.currentItem.name}}</div>
+				<img class="picture" ng-show="scanC.currentItem != null && scanC.currentItem.message === false" ng-src="{{scanC.currentItem.image}}" />
+				<div class="text">{{ scanC.currentItem.message }}</div>
+				<div class="footer">Meine Bewertung: {{scanC.currentItem.review_date | date:'dd.MM.yyyy'}}</div>		
+			</div>
+			<div class="zusatz" ng-show="scanC.currentItem.message === false && scanC.status != 'load'">
+				<div class="text" ng-show="scanC.currentItem.laktose === true && scanC.currentItem.review_state == ''">Teste das Produkt und bewerte es nach dem Essen auf dessen Verträglichkeit.</div>
+				<div class="text" ng-show="scanC.currentItem.laktose === true && scanC.currentItem.review_state != ''">Wenn du möchtest, kannst du das Produkt nochmals bewerten.</div>
+				<div class="button" ng-show="scanC.currentItem.laktose === true" ng-click="scanC.toLibrary($event, scanC.currentItem)"></div>
+				<div class="text" ng-show="scanC.currentItem.laktose === false">Du kannst das Produkt ohne Beschwerden geniessen.</div>
+			</div>
 		</div>
-	
-		<div class="dropZoneLibrary" ng-show="scanC.currentItem != null && scanC.currentItem.laktose" ng-class="[scanC.status]" ng-click="scanC.toLibrary($event, scanC.currentItem)">
-			<img src="images/icon_library_round.svg" />
-		</div>
+			
 	</div>
 </section>
-

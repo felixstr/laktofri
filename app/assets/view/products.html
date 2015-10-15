@@ -1,4 +1,8 @@
 <section class="view viewProducts" ng-controller="productController as productC">
+	<header>
+		LactoRate
+	</header>
+		
 	<nav class="filter filter_{{productC.currentStateFilter}}">
 			<button class="all" ng-class="productC.currentState == 'all' ? 'active' : ''" ng-click="productC.changeFilter('all')">
 				<div></div>
@@ -27,10 +31,7 @@
 		</nav>
 	
 	<div class="bg_wrap">
-		
-			
-		<a ng-show="productC.viewCount > 0" class="link_review" href="#/review"><span class="count">{{productC.viewCount}}</span>Unbewertete Produkte</a>
-		
+				
 		<div class="product_list">
 			<div class="product_wrapper" ng-class="productC.itemEdit === item ? 'open' : ''" ng-repeat="item in productC.product_list | filter:{reviewed:true} | productFilter:productC.currentState | orderBy:'review_date':true">
 				<div class="product reviewed review_{{item.review_state}}" ng-class="productC.itemEdit === item ? 'open' : ''" hm-panmove="productC.moveProduct($event, item)" hm-panend="productC.moveProduct($event, item)" hm-recognizer-options='{"directions":"DIRECTION_HORIZONTAL"}'>
