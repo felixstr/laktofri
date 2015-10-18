@@ -1,4 +1,4 @@
-var scanditEnable = false;
+var scanditEnable = true;
 
 
 Date.prototype.yyyymmdd = function() {
@@ -60,7 +60,6 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 			}
 			var pageChange = (from == '' ? '' : from+'_')+to;
 			
-// 			console.log('from', from);
 			if (siteProperties.scanditEnable) {
 				if (from == 'scan2') {
 					Scandit.hide();
@@ -111,7 +110,6 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 		        }, 300);
 			} else {
 				var barcode = barcode_array[Math.floor(Math.random() * barcode_array.length)];
-	// 			console.log(barcode);
 				
 				var newItem = null;
 	
@@ -169,7 +167,6 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 		}
 		
 		scanC.moveProduct = function(event, item) {
-// 			var item = scanC.currentItem;
 			
 			$('#product_wrap').removeClass('animate');
 			
@@ -601,15 +598,19 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 	        
 		}
 		productC.deleteProduct = function(item) {
+			productC.itemEdit = null;
 			
+			$timeout(function() {
+				angular.forEach(productC.product_list, function (value, key) {
+			        if (item == value) {
+				        productC.product_list.splice(key, 1);
+		            }
+		        });
+			}, 300);
 			
-			angular.forEach(productC.product_list, function (value, key) {
-		        if (item == value) {
-			        productC.product_list.splice(key, 1);
-	            }
-	        });
 	        
-	        productC.itemEdit = null;
+	        
+	        
 		}
 		
 		
@@ -642,8 +643,6 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 
 		reviewC.moveProduct = function(event, item) {
 			$('.stack').removeClass('animate');
-/* 			'transform': 'scale('+(1-(item.stack_position*0.05))+') translateY('+(28-(item.stack_position*12))+'px)' */
-// 			console.log('event', event.deltaX);
 			
 			var max = 30;
 			for (var i = 0; i < reviewC.stackProperties.count; i++) {
@@ -772,7 +771,7 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 		helpC.siteProperties = siteProperties;
 		
 		helpC.changeMode = function(type) {
-// 			console.log('changeMode', siteProperties.scanditEnable);
+
 			if (type == 'demo') {
 				siteProperties.scanditEnable = false;
 				Scandit.stop();
@@ -966,13 +965,9 @@ angular.module('laktofriApp', ['ui.router', 'ngAnimate', 'ngTouch', 'hmTouchEven
 			    }).filter(function(value){
 				    return value !== undefined;
 			    });
-			    
-// 			    console.log('tempArray1', tempArray);
-			    
+			    			    
 			    tempArray.sort(function(a, b){return a.position-b.position});
-			    
-// 			    console.log('tempArray2', tempArray);
-			    
+			    			    
 			    var newPositions = 0;
 				tempArray.forEach(function(value) {
 					var itemPosition = 100000;

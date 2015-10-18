@@ -7,7 +7,7 @@
 			<h1>LactoRate</h1>
 			<h2>Für Personen mit Laktose-Unverträglichkeit</h2>
 			
-			<h3>Scannen <span></span> Essen <span></span> Bewerten</h3>
+<!-- 			<h3>Scannen <span></span> Essen <span></span> Bewerten</h3> -->
 		</div>
 		
 		<div id="product_wrap" ng-show="scanC.status == 'load' || scanC.status == 'close' || scanC.currentItem != null" ng-class="[scanC.status, {'load': scanC.load}, {'message': scanC.currentItem.message != false}, {'reviewed': scanC.currentItem.reviewed}, {'nok': scanC.currentItem.laktose}, {'ok': !scanC.currentItem.laktose}]" hm-panend="scanC.moveProduct($event, scanC.currentItem)" hm-panmove="scanC.moveProduct($event, scanC.currentItem)">

@@ -14,7 +14,6 @@ $color-blue-shadow: #383950;
 $color-blue-shadow-light: #BFC1C5;
 
 $color-grey-light: #F5F5F5;
-// $color-grey-light: #efeeee;
 
 
 /* sizes */
@@ -216,8 +215,7 @@ main {
 				transform: translateX(-100vw) scale3d(0.9, 0.9, 0.9)  translateY($header-height/2);
 			}
 			&.ng-enter-active {
-			// 	transform: scale3d(1, 1, 1) translateX(0) translateY(0);
-				
+								
 				animation: view-in-left 0.5s 0.2s ease-in-out;
 						
 				@keyframes view-in-left {
@@ -239,9 +237,7 @@ main {
 			&.ng-enter {
 				transform: translateX(100vw) scale3d(0.9, 0.9, 0.9)  translateY($header-height/2);
 			}
-			&.ng-enter-active {
-			// 	transform: scale3d(1, 1, 1) translateX(0) translateY(0);
-				
+			&.ng-enter-active {				
 				animation: view-in 0.5s 0.2s ease-in-out;
 						
 				@keyframes view-in {
@@ -295,7 +291,6 @@ section.view {
 		padding-bottom: $footer-height + 15px;
 		padding-bottom: 15px;
 		background: $color-blue-light;
-// 		min-height: calc(100vh - #{$footer-height});
 		height: calc(100vh - #{$footer-height});
 		
 		overflow: hidden;
@@ -320,7 +315,6 @@ section.view.viewScan {
 	
 	.box_scan {
 		position: absolute;
-// 		background: green;
 		width: calc(100vw - 30px);
 		height: 155px;
 		margin-left: 15px;
@@ -709,7 +703,6 @@ section.view.viewProducts {
 			border: none;
 			background: none;
 			position: relative;
-// 			margin-top: $statusbar-height;
 			
 			div {
 				background: $color-blue-shadow;
@@ -817,9 +810,6 @@ section.view.viewProducts {
 			.product {
 				position: absolute;
 				z-index: 10;
-// 				transform: translateX(00px);
-				
-// 				transition: all 2s ease-in-out;
 				
 				.title {
 					border-top: 4px solid black;
@@ -977,7 +967,17 @@ section.view.viewProducts {
 					100% { opacity: 1; transform: translateX(0px); }
 				}
 			}
-			
+			/*
+
+			&.ng-leave {
+				transition: 0.4s 0.2s all ease;
+				
+				&.ng-leave-active {
+					opacity: 0;
+					transform: scale(0.9);
+				}
+			}
+*/
 
 		}
 		
@@ -985,6 +985,7 @@ section.view.viewProducts {
 			opacity: 0;
 			transform: scale3d(0.9, 0.9, 0.9);
 		}
+		
 	}
 	
 }
@@ -1279,7 +1280,6 @@ section.view.viewHelp {
 	
 	box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.13);
 	border-radius: 2px;
-// 	overflow: hidden;
 	
 	.title {
 		width: 100%;
